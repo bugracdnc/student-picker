@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
     <title>Student Picker</title>
-    <link rel="stylesheet" href="/src/styles.css" />
+    <link href="/src/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="app">
@@ -12,12 +12,12 @@
         <h1>Student Picker</h1>
         <div id="controlsPanel"></div>
     </header>
-    <main style="display:flex;gap:12px;padding:12px">
-        <section id="classesPanel" style="width:200px;border-right:1px solid #ddd;padding-right:12px"></section>
-        <section id="studentsPanel" style="width:360px;border-right:1px solid #ddd;padding-right:12px"></section>
-        <section id="mainPanel" style="flex:1"></section>
+    <main id="mainTag">
+        <section id="classesPanel"></section>
+        <section id="studentsPanel"></section>
+        <section id="mainPanel"></section>
     </main>
 </div>
-<script type="module" src="/src/main.ts"></script>
+<script src="/src/main.ts" type="module"></script>
 </body>
 </html>
