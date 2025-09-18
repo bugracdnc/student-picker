@@ -1,6 +1,6 @@
 // src/main.ts
-import type { AppData, ClassItem, Student, /*LogEntry,*/ Status } from "./models";
-import { loadData, saveData, exportDataFile, importDataFile } from "./storage";
+import type {AppData, ClassItem, Status, Student} from "./models";
+import {exportDataFile, importDataFile, loadData, saveData} from "./storage";
 
 /*const app = document.getElementById("app")!;*/
 const classesPanel = document.getElementById("classesPanel")!;
@@ -12,8 +12,13 @@ let data: AppData = loadData();
 let currentClassId: string | null = data.classes.length ? data.classes[0].id : null;
 
 // small helper
-function uid() { return (crypto as any).randomUUID?.() ?? ("id-" + Math.random().toString(36).slice(2,9)); }
-function nowISO() { return new Date().toISOString(); }
+function uid() {
+    return (crypto as any).randomUUID?.() ?? ("id-" + Math.random().toString(36).slice(2, 9));
+}
+
+function nowISO() {
+    return new Date().toISOString();
+}
 
 function persist() {
     saveData(data);
@@ -23,7 +28,7 @@ function persist() {
 /* ========== Core actions ========== */
 
 function addClass(name: string) {
-    const c: ClassItem = { id: uid(), name, students: [] };
+    const c: ClassItem = {id: uid(), name, students: []};
     data.classes.push(c);
     currentClassId = c.id;
     persist();
@@ -39,7 +44,12 @@ function addStudentToCurrent(name: string) {
     if (!currentClassId) return alert("Select or create a class first.");
     const cls = data.classes.find(c => c.id === currentClassId)!;
     const s: Student = {
-        id: uid(), name: name.trim(), status: "present", participationCount: 0, score: 0, hasParticipatedThisRound: false
+        id: uid(),
+        name: name.trim(),
+        status: "present",
+        participationCount: 0,
+        score: 0,
+        hasParticipatedThisRound: false
     };
     cls.students.push(s);
     persist();
@@ -53,8 +63,10 @@ function removeStudent(classId: string, studentId: string) {
 }
 
 function setStatus(classId: string, studentId: string, status: Status) {
-    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
-    const s = cls.students.find(x => x.id === studentId); if (!s) return;
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    const s = cls.students.find(x => x.id === studentId);
+    if (!s) return;
     s.status = status;
     persist();
 }
@@ -68,21 +80,24 @@ function pickRandomFromCurrent(): Student | null {
     const chosen = available[idx];
     chosen.hasParticipatedThisRound = true;
     chosen.participationCount++;
-    data.logs.push({ type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO() });
+    data.logs.push({type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO()});
     persist();
     return chosen;
 }
 
 function updateScore(classId: string, studentId: string, delta: number) {
-    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
-    const s = cls.students.find(x => x.id === studentId); if (!s) return;
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    const s = cls.students.find(x => x.id === studentId);
+    if (!s) return;
     s.score += delta;
-    data.logs.push({ type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO() });
+    data.logs.push({type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO()});
     persist();
 }
 
 function resetRound(classId: string) {
-    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
     cls.students.forEach(s => s.hasParticipatedThisRound = false);
     persist();
 }
@@ -108,17 +123,17 @@ async function doImport(file: File) {
     }
 }
 
-/* ========== Admin logs (simple password) ========== */
+/* ========== Admin logs (simple password) ==========
 const ADMIN_KEY = "student-picker-admin-pw";
 
-function setAdminPassword() {
+/*function setAdminPassword() {
     const pw = prompt("Set admin password (will be stored locally):");
     if (!pw) return alert("No password set.");
     localStorage.setItem(ADMIN_KEY, pw);
     alert("Password saved.");
-}
+}*/
 
-function openAdminLogs() {
+/*function openAdminLogs() {
     const stored = localStorage.getItem(ADMIN_KEY);
     if (!stored) {
         if (!confirm("No admin password set — set one now?")) return;
@@ -135,10 +150,10 @@ function openAdminLogs() {
     if (!w) return alert("Popup blocked.");
     w.document.title = "Student Picker — Logs";
     w.document.body.innerHTML = `<pre style="white-space:pre-wrap;font-family:monospace">${escapeHtml(lines || "No logs")}</pre>`;
-}
+}*/
 
 function escapeHtml(s = "") {
-    return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]!));
+    return s.replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]!));
 }
 
 /* ========== Rendering ========== */
@@ -152,7 +167,9 @@ function renderAll() {
 
 function renderClassesPanel() {
     classesPanel.innerHTML = "";
-    const h = document.createElement("h3"); h.textContent = "Classes"; classesPanel.appendChild(h);
+    const h = document.createElement("h3");
+    h.textContent = "Classes";
+    classesPanel.appendChild(h);
 
     const ul = document.createElement("ul");
     data.classes.forEach(c => {
@@ -160,12 +177,19 @@ function renderClassesPanel() {
         li.style.marginBottom = "6px";
         const btn = document.createElement("button");
         btn.textContent = (currentClassId === c.id ? "• " : "") + c.name;
-        btn.onclick = () => { currentClassId = c.id; renderAll(); };
+        btn.onclick = () => {
+            currentClassId = c.id;
+            renderAll();
+        };
         li.appendChild(btn);
         const del = document.createElement("button");
-        del.textContent = "✕"; del.title = "Delete class";
+        del.textContent = "✕";
+        del.title = "Delete class";
         del.style.marginLeft = "8px";
-        del.onclick = () => { if (confirm(`Delete class "${c.name}"?`)) removeClass(c.id); };
+        del.style.color = "#F00";
+        del.onclick = () => {
+            if (confirm(`Delete class "${c.name}"?`)) removeClass(c.id);
+        };
         li.appendChild(del);
         ul.appendChild(li);
     });
@@ -183,37 +207,53 @@ function renderClassesPanel() {
 
 function renderStudentsPanel() {
     studentsPanel.innerHTML = "";
-    const title = document.createElement("h3"); title.textContent = "Students"; studentsPanel.appendChild(title);
-    if (!currentClassId) { studentsPanel.appendChild(document.createTextNode("No class selected")); return; }
+    const title = document.createElement("h3");
+    title.textContent = "Students";
+    studentsPanel.appendChild(title);
+    if (!currentClassId) {
+        studentsPanel.appendChild(document.createTextNode("No class selected"));
+        return;
+    }
     const cls = data.classes.find(c => c.id === currentClassId)!;
 
     const list = document.createElement("ul");
     cls.students.forEach(s => {
         const li = document.createElement("li");
-        li.style.marginBottom = "8px";
-        li.innerHTML = `<strong>${escapeHtml(s.name)}</strong> — score: ${s.score} — picked: ${s.participationCount}`;
+        li.className = "student-row";
+        li.innerHTML = `<span class="student-name">${escapeHtml(s.name)}</span>`;
         // status select
         const sel = document.createElement("select");
-        ["present","absent","skipped"].forEach(st => {
+        ["present", "absent", "skipped"].forEach(st => {
             const o = document.createElement("option");
-            o.value = st; o.textContent = st;
+            o.value = st;
+            o.textContent = st;
             if (s.status === st) o.selected = true;
             sel.appendChild(o);
         });
         sel.onchange = () => setStatus(cls.id, s.id, sel.value as Status);
         li.appendChild(document.createTextNode(" "));
         li.appendChild(sel);
+        li.appendChild(document.createTextNode(`${s.score}/${s.participationCount}`))
 
         // + / - score
-        const plus = document.createElement("button"); plus.textContent = "+"; plus.onclick = () => updateScore(cls.id, s.id, 1);
-        const minus = document.createElement("button"); minus.textContent = "−"; minus.onclick = () => updateScore(cls.id, s.id, -1);
+        const plus = document.createElement("button");
+        plus.textContent = "+";
+        plus.onclick = () => updateScore(cls.id, s.id, 1);
+        const minus = document.createElement("button");
+        minus.textContent = "−";
+        minus.onclick = () => updateScore(cls.id, s.id, -1);
         li.appendChild(document.createTextNode(" "));
         li.appendChild(plus);
         li.appendChild(minus);
 
         // delete student
-        const del = document.createElement("button"); del.textContent = "Delete"; del.style.marginLeft = "8px";
-        del.onclick = () => { if (confirm(`Delete "${s.name}"?`)) removeStudent(cls.id, s.id); };
+        const del = document.createElement("button");
+        del.textContent = "✕";
+        del.style.marginLeft = "8px";
+        del.style.color = "#F00";
+        del.onclick = () => {
+            if (confirm(`Delete "${s.name}"?`)) removeStudent(cls.id, s.id);
+        };
         li.appendChild(del);
 
         list.appendChild(li);
@@ -233,15 +273,18 @@ function renderStudentsPanel() {
 function renderMainPanel() {
     mainPanel.innerHTML = "";
     const h = document.createElement("h3");
-    h.textContent = "Random Picker / Scoreboard";
+    h.textContent = "Random Picker";
     mainPanel.appendChild(h);
 
-    if (!currentClassId) { mainPanel.appendChild(document.createTextNode("Select a class.")); return; }
+    if (!currentClassId) {
+        mainPanel.appendChild(document.createTextNode("Select a class."));
+        return;
+    }
     const cls = data.classes.find(c => c.id === currentClassId)!;
 
-    // available list + participated list
+    // available list
     const avail = cls.students.filter(s => s.status === "present" && !s.hasParticipatedThisRound);
-    const part = cls.students.filter(s => s.status === "present" && s.hasParticipatedThisRound);
+    avail.sort((a, b) => b.score - a.score);
 
     const pickBtn = document.createElement("button");
     pickBtn.textContent = avail.length ? `Pick random (${avail.length} available)` : "No available students";
@@ -256,7 +299,9 @@ function renderMainPanel() {
     };
     mainPanel.appendChild(pickBtn);
 
-    const resetBtn = document.createElement("button"); resetBtn.textContent = "Reset round"; resetBtn.style.marginLeft = "8px";
+    const resetBtn = document.createElement("button");
+    resetBtn.textContent = "Reset round";
+    resetBtn.style.marginLeft = "8px";
     resetBtn.onclick = () => {
         if (!confirm("Clear this round (mark everyone as not participated)?")) return;
         resetRound(cls.id);
@@ -264,51 +309,50 @@ function renderMainPanel() {
     mainPanel.appendChild(resetBtn);
 
     // Available column
-    const col = document.createElement("div"); col.style.display = "flex"; col.style.gap = "24px"; col.style.marginTop = "12px";
-    const c1 = document.createElement("div"); c1.innerHTML = `<h4>Available</h4>`;
-    avail.forEach(s => {
-        const el = document.createElement("div"); el.textContent = `${s.name} (score:${s.score})`;
-        c1.appendChild(el);
-    });
-    col.appendChild(c1);
-
-    const c2 = document.createElement("div"); c2.innerHTML = `<h4>Participated in round</h4>`;
-    part.forEach(s => {
-        const el = document.createElement("div"); el.textContent = `${s.name} (picked:${s.participationCount})`;
-        c2.appendChild(el);
-    });
-    col.appendChild(c2);
+    const col = document.createElement("div");
+    col.style.display = "flex";
+    col.style.gap = "24px";
+    col.style.marginTop = "12px";
 
     // Scoreboard (sorted)
-    const scoreboard = document.createElement("div"); scoreboard.innerHTML = `<h4>Scoreboard</h4>`;
-    const sorted = [...cls.students].sort((a,b) => b.score - a.score || a.name.localeCompare(b.name));
+    const scoreboard = document.createElement("div");
+    scoreboard.innerHTML = `<h4>Scoreboard</h4>`;
+    const sorted = [...cls.students].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
     sorted.forEach(s => {
         const r = document.createElement("div");
-        r.innerHTML = `${escapeHtml(s.name)} — ${s.score} — picked:${s.participationCount}`;
-        // quick score buttons (also here)
-        const p = document.createElement("button"); p.textContent = "+"; p.onclick = () => updateScore(cls.id, s.id, 1);
-        const m = document.createElement("button"); m.textContent = "−"; m.onclick = () => updateScore(cls.id, s.id, -1);
-        r.appendChild(document.createTextNode(" "));
-        r.appendChild(p); r.appendChild(m);
+        r.style.marginBottom = "8px";
+        if (s.hasParticipatedThisRound) r.style.color = "#2878e0";
+        else if (s.status.toString() == "absent") r.style.color = "#ccc";
+        else r.style.color = "#179123";
+        r.innerHTML = ` • ${escapeHtml(s.name)} — ${s.score}/${s.participationCount}`;
         scoreboard.appendChild(r);
     });
 
+    col.appendChild(scoreboard);
     mainPanel.appendChild(col);
-    mainPanel.appendChild(scoreboard);
 }
 
 function renderControlsPanel() {
     controlsPanel.innerHTML = "";
-    const exp = document.createElement("button"); exp.textContent = "Export JSON"; exp.onclick = doExport;
-    const imp = document.createElement("input"); imp.type = "file"; imp.accept = "application/json"; imp.onchange = (e) => {
-        const f = (e.target as HTMLInputElement).files?.[0]; if (!f) return; doImport(f);
+    const exp = document.createElement("button");
+    exp.textContent = "Export JSON";
+    exp.onclick = doExport;
+    const imp = document.createElement("input");
+    imp.type = "file";
+    imp.accept = "application/json";
+    imp.onchange = (e) => {
+        const f = (e.target as HTMLInputElement).files?.[0];
+        if (!f) return;
+        doImport(f);
     };
-    const setPw = document.createElement("button"); setPw.textContent = "Set Admin Password"; setPw.onclick = setAdminPassword;
-    const logs = document.createElement("button"); logs.textContent = "Open Admin Logs"; logs.onclick = openAdminLogs;
-    controlsPanel.appendChild(exp); controlsPanel.appendChild(document.createTextNode(" "));
-    controlsPanel.appendChild(imp); controlsPanel.appendChild(document.createElement("br"));
-    controlsPanel.appendChild(setPw); controlsPanel.appendChild(document.createTextNode(" "));
-    controlsPanel.appendChild(logs);
+    //const setPw = document.createElement("button"); setPw.textContent = "Set Admin Password"; setPw.onclick = setAdminPassword;
+    //const logs = document.createElement("button"); logs.textContent = "Open Admin Logs"; logs.onclick = openAdminLogs;
+    controlsPanel.appendChild(exp);
+    controlsPanel.appendChild(document.createTextNode(" "));
+    controlsPanel.appendChild(imp);
+    controlsPanel.appendChild(document.createElement("br"));
+    //controlsPanel.appendChild(setPw); controlsPanel.appendChild(document.createTextNode(" "));
+    //controlsPanel.appendChild(logs);
 }
 
 /* ========== bootstrap ========== */
