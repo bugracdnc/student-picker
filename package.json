@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && mv dist/index.html dist/student-picker.html",
     "preview": "vite preview"
   },
   "devDependencies": {
