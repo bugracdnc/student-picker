@@ -17,7 +17,7 @@ export function saveData(data: AppData) {
     localStorage.setItem(KEY, JSON.stringify(data));
 }
 
-export function exportDataFileAsJSON(data: AppData) {
+export function exportDataFile(data: AppData) {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -27,7 +27,7 @@ export function exportDataFileAsJSON(data: AppData) {
     URL.revokeObjectURL(url);
 }
 
-export function importDataFileFromJSON(file: File): Promise<AppData> {
+export function importDataFile(file: File): Promise<AppData> {
     return new Promise((resolve, reject) => {
         const r = new FileReader();
         r.onload = () => {
