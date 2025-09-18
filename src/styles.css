@@ -1,3 +1,56 @@
-body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; color:#222; }
-button { margin:2px; padding:4px 8px; }
-h1,h3,h4 { margin:0 0 8px 0; }
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    margin: 0;
+    color: #222;
+}
+
+button {
+    margin: 2px;
+    padding: 4px 8px;
+}
+
+h1, h3, h4 {
+    margin: 0 0 8px 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+#mainTag {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+}
+
+#classesPanel {
+    width: auto;
+    border-right: 1px solid #ddd;
+    padding: 0 24px;
+}
+
+#studentsPanel {
+    width: auto;
+    border-right: 1px solid #ddd;
+    padding: 0 24px;
+}
+
+#mainPanel {
+    flex: 1;
+}
+
+.student-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between buttons/text */
+    margin-bottom: 2px;
+    background: #f6f6f6;
+    padding: 2px;
+}
+
+.student-name {
+    font-weight: bold;
+    width: 250px; /* fixed width so all names align */
+    text-align: left;
+}
