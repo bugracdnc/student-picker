@@ -286,13 +286,14 @@ function renderMainPanel() {
     const avail = cls.students.filter(s => s.status === "present" && !s.hasParticipatedThisRound);
     avail.sort((a, b) => b.score - a.score);
 
+    const pickLbl = document.getElementById("picked-student");
     const pickBtn = document.createElement("button");
     pickBtn.textContent = avail.length ? `Pick random (${avail.length} available)` : "No available students";
     pickBtn.disabled = avail.length === 0;
     pickBtn.onclick = () => {
         const chosen = pickRandomFromCurrent();
         if (chosen) {
-            alert(`Picked: ${chosen.name}`);
+            pickLbl!.innerText = chosen.name;
         } else {
             alert("No one available to pick.");
         }
@@ -304,6 +305,7 @@ function renderMainPanel() {
     resetBtn.style.marginLeft = "8px";
     resetBtn.onclick = () => {
         if (!confirm("Clear this round (mark everyone as not participated)?")) return;
+        pickLbl!.innerText = "";
         resetRound(cls.id);
     };
     mainPanel.appendChild(resetBtn);
@@ -322,7 +324,8 @@ function renderMainPanel() {
         const r = document.createElement("div");
         r.style.marginBottom = "8px";
         if (s.hasParticipatedThisRound) r.style.color = "#2878e0";
-        else if (s.status.toString() == "absent") r.style.color = "#ccc";
+        else if (s.status.toString() === "absent") r.style.color = "#ccc";
+        else if (s.status.toString() === "skipped") r.style.color = "#cf3232";
         else r.style.color = "#179123";
         r.innerHTML = ` • ${escapeHtml(s.name)} — ${s.score}/${s.participationCount}`;
         scoreboard.appendChild(r);
@@ -334,6 +337,8 @@ function renderMainPanel() {
 
 function renderControlsPanel() {
     controlsPanel.innerHTML = "";
+    const label = document.createElement("h2");
+    label.innerText = "test";
     const exp = document.createElement("button");
     exp.textContent = "Export JSON";
     exp.onclick = doExport;
