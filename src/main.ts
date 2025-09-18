@@ -1,24 +1,316 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+// src/main.ts
+import type { AppData, ClassItem, Student, /*LogEntry,*/ Status } from "./models";
+import { loadData, saveData, exportDataFile, importDataFile } from "./storage";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+/*const app = document.getElementById("app")!;*/
+const classesPanel = document.getElementById("classesPanel")!;
+const studentsPanel = document.getElementById("studentsPanel")!;
+const mainPanel = document.getElementById("mainPanel")!;
+const controlsPanel = document.getElementById("controlsPanel")!;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+let data: AppData = loadData();
+let currentClassId: string | null = data.classes.length ? data.classes[0].id : null;
+
+// small helper
+function uid() { return (crypto as any).randomUUID?.() ?? ("id-" + Math.random().toString(36).slice(2,9)); }
+function nowISO() { return new Date().toISOString(); }
+
+function persist() {
+    saveData(data);
+    renderAll();
+}
+
+/* ========== Core actions ========== */
+
+function addClass(name: string) {
+    const c: ClassItem = { id: uid(), name, students: [] };
+    data.classes.push(c);
+    currentClassId = c.id;
+    persist();
+}
+
+function removeClass(classId: string) {
+    data.classes = data.classes.filter(c => c.id !== classId);
+    if (currentClassId === classId) currentClassId = data.classes[0]?.id ?? null;
+    persist();
+}
+
+function addStudentToCurrent(name: string) {
+    if (!currentClassId) return alert("Select or create a class first.");
+    const cls = data.classes.find(c => c.id === currentClassId)!;
+    const s: Student = {
+        id: uid(), name: name.trim(), status: "present", participationCount: 0, score: 0, hasParticipatedThisRound: false
+    };
+    cls.students.push(s);
+    persist();
+}
+
+function removeStudent(classId: string, studentId: string) {
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    cls.students = cls.students.filter(s => s.id !== studentId);
+    persist();
+}
+
+function setStatus(classId: string, studentId: string, status: Status) {
+    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
+    const s = cls.students.find(x => x.id === studentId); if (!s) return;
+    s.status = status;
+    persist();
+}
+
+function pickRandomFromCurrent(): Student | null {
+    if (!currentClassId) return null;
+    const cls = data.classes.find(c => c.id === currentClassId)!;
+    const available = cls.students.filter(s => s.status === "present" && !s.hasParticipatedThisRound);
+    if (available.length === 0) return null;
+    const idx = Math.floor(Math.random() * available.length);
+    const chosen = available[idx];
+    chosen.hasParticipatedThisRound = true;
+    chosen.participationCount++;
+    data.logs.push({ type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO() });
+    persist();
+    return chosen;
+}
+
+function updateScore(classId: string, studentId: string, delta: number) {
+    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
+    const s = cls.students.find(x => x.id === studentId); if (!s) return;
+    s.score += delta;
+    data.logs.push({ type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO() });
+    persist();
+}
+
+function resetRound(classId: string) {
+    const cls = data.classes.find(c => c.id === classId); if (!cls) return;
+    cls.students.forEach(s => s.hasParticipatedThisRound = false);
+    persist();
+}
+
+/* ========== Export / Import ========== */
+
+function doExport() {
+    exportDataFile(data);
+}
+
+async function doImport(file: File) {
+    try {
+        const imported = await importDataFile(file);
+        // Basic validation
+        if (!imported || !Array.isArray(imported.classes)) throw new Error("Bad file");
+        data = imported as AppData;
+        // keep currentClass sensible
+        currentClassId = data.classes[0]?.id ?? null;
+        persist();
+        alert("Import complete.");
+    } catch (e) {
+        alert("Import failed: " + String(e));
+    }
+}
+
+/* ========== Admin logs (simple password) ========== */
+const ADMIN_KEY = "student-picker-admin-pw";
+
+function setAdminPassword() {
+    const pw = prompt("Set admin password (will be stored locally):");
+    if (!pw) return alert("No password set.");
+    localStorage.setItem(ADMIN_KEY, pw);
+    alert("Password saved.");
+}
+
+function openAdminLogs() {
+    const stored = localStorage.getItem(ADMIN_KEY);
+    if (!stored) {
+        if (!confirm("No admin password set — set one now?")) return;
+        setAdminPassword();
+        return;
+    }
+    const attempt = prompt("Enter admin password:");
+    if (attempt !== stored) return alert("Wrong password.");
+    // show logs in simple window
+    const lines = data.logs.slice().reverse().map(l => {
+        return `${l.ts} — ${l.type} — class:${l.classId} student:${l.studentId} ${l.delta ?? ""}`;
+    }).join("\n");
+    const w = window.open("", "_blank", "width=700,height=600");
+    if (!w) return alert("Popup blocked.");
+    w.document.title = "Student Picker — Logs";
+    w.document.body.innerHTML = `<pre style="white-space:pre-wrap;font-family:monospace">${escapeHtml(lines || "No logs")}</pre>`;
+}
+
+function escapeHtml(s = "") {
+    return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]!));
+}
+
+/* ========== Rendering ========== */
+
+function renderAll() {
+    renderClassesPanel();
+    renderStudentsPanel();
+    renderMainPanel();
+    renderControlsPanel();
+}
+
+function renderClassesPanel() {
+    classesPanel.innerHTML = "";
+    const h = document.createElement("h3"); h.textContent = "Classes"; classesPanel.appendChild(h);
+
+    const ul = document.createElement("ul");
+    data.classes.forEach(c => {
+        const li = document.createElement("li");
+        li.style.marginBottom = "6px";
+        const btn = document.createElement("button");
+        btn.textContent = (currentClassId === c.id ? "• " : "") + c.name;
+        btn.onclick = () => { currentClassId = c.id; renderAll(); };
+        li.appendChild(btn);
+        const del = document.createElement("button");
+        del.textContent = "✕"; del.title = "Delete class";
+        del.style.marginLeft = "8px";
+        del.onclick = () => { if (confirm(`Delete class "${c.name}"?`)) removeClass(c.id); };
+        li.appendChild(del);
+        ul.appendChild(li);
+    });
+    classesPanel.appendChild(ul);
+
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Add class";
+    addBtn.onclick = () => {
+        const name = prompt("Class name:");
+        if (!name) return;
+        addClass(name);
+    };
+    classesPanel.appendChild(addBtn);
+}
+
+function renderStudentsPanel() {
+    studentsPanel.innerHTML = "";
+    const title = document.createElement("h3"); title.textContent = "Students"; studentsPanel.appendChild(title);
+    if (!currentClassId) { studentsPanel.appendChild(document.createTextNode("No class selected")); return; }
+    const cls = data.classes.find(c => c.id === currentClassId)!;
+
+    const list = document.createElement("ul");
+    cls.students.forEach(s => {
+        const li = document.createElement("li");
+        li.style.marginBottom = "8px";
+        li.innerHTML = `<strong>${escapeHtml(s.name)}</strong> — score: ${s.score} — picked: ${s.participationCount}`;
+        // status select
+        const sel = document.createElement("select");
+        ["present","absent","skipped"].forEach(st => {
+            const o = document.createElement("option");
+            o.value = st; o.textContent = st;
+            if (s.status === st) o.selected = true;
+            sel.appendChild(o);
+        });
+        sel.onchange = () => setStatus(cls.id, s.id, sel.value as Status);
+        li.appendChild(document.createTextNode(" "));
+        li.appendChild(sel);
+
+        // + / - score
+        const plus = document.createElement("button"); plus.textContent = "+"; plus.onclick = () => updateScore(cls.id, s.id, 1);
+        const minus = document.createElement("button"); minus.textContent = "−"; minus.onclick = () => updateScore(cls.id, s.id, -1);
+        li.appendChild(document.createTextNode(" "));
+        li.appendChild(plus);
+        li.appendChild(minus);
+
+        // delete student
+        const del = document.createElement("button"); del.textContent = "Delete"; del.style.marginLeft = "8px";
+        del.onclick = () => { if (confirm(`Delete "${s.name}"?`)) removeStudent(cls.id, s.id); };
+        li.appendChild(del);
+
+        list.appendChild(li);
+    });
+    studentsPanel.appendChild(list);
+
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Add student";
+    addBtn.onclick = () => {
+        const name = prompt("Student name:");
+        if (!name) return;
+        addStudentToCurrent(name);
+    };
+    studentsPanel.appendChild(addBtn);
+}
+
+function renderMainPanel() {
+    mainPanel.innerHTML = "";
+    const h = document.createElement("h3");
+    h.textContent = "Random Picker / Scoreboard";
+    mainPanel.appendChild(h);
+
+    if (!currentClassId) { mainPanel.appendChild(document.createTextNode("Select a class.")); return; }
+    const cls = data.classes.find(c => c.id === currentClassId)!;
+
+    // available list + participated list
+    const avail = cls.students.filter(s => s.status === "present" && !s.hasParticipatedThisRound);
+    const part = cls.students.filter(s => s.status === "present" && s.hasParticipatedThisRound);
+
+    const pickBtn = document.createElement("button");
+    pickBtn.textContent = avail.length ? `Pick random (${avail.length} available)` : "No available students";
+    pickBtn.disabled = avail.length === 0;
+    pickBtn.onclick = () => {
+        const chosen = pickRandomFromCurrent();
+        if (chosen) {
+            alert(`Picked: ${chosen.name}`);
+        } else {
+            alert("No one available to pick.");
+        }
+    };
+    mainPanel.appendChild(pickBtn);
+
+    const resetBtn = document.createElement("button"); resetBtn.textContent = "Reset round"; resetBtn.style.marginLeft = "8px";
+    resetBtn.onclick = () => {
+        if (!confirm("Clear this round (mark everyone as not participated)?")) return;
+        resetRound(cls.id);
+    };
+    mainPanel.appendChild(resetBtn);
+
+    // Available column
+    const col = document.createElement("div"); col.style.display = "flex"; col.style.gap = "24px"; col.style.marginTop = "12px";
+    const c1 = document.createElement("div"); c1.innerHTML = `<h4>Available</h4>`;
+    avail.forEach(s => {
+        const el = document.createElement("div"); el.textContent = `${s.name} (score:${s.score})`;
+        c1.appendChild(el);
+    });
+    col.appendChild(c1);
+
+    const c2 = document.createElement("div"); c2.innerHTML = `<h4>Participated in round</h4>`;
+    part.forEach(s => {
+        const el = document.createElement("div"); el.textContent = `${s.name} (picked:${s.participationCount})`;
+        c2.appendChild(el);
+    });
+    col.appendChild(c2);
+
+    // Scoreboard (sorted)
+    const scoreboard = document.createElement("div"); scoreboard.innerHTML = `<h4>Scoreboard</h4>`;
+    const sorted = [...cls.students].sort((a,b) => b.score - a.score || a.name.localeCompare(b.name));
+    sorted.forEach(s => {
+        const r = document.createElement("div");
+        r.innerHTML = `${escapeHtml(s.name)} — ${s.score} — picked:${s.participationCount}`;
+        // quick score buttons (also here)
+        const p = document.createElement("button"); p.textContent = "+"; p.onclick = () => updateScore(cls.id, s.id, 1);
+        const m = document.createElement("button"); m.textContent = "−"; m.onclick = () => updateScore(cls.id, s.id, -1);
+        r.appendChild(document.createTextNode(" "));
+        r.appendChild(p); r.appendChild(m);
+        scoreboard.appendChild(r);
+    });
+
+    mainPanel.appendChild(col);
+    mainPanel.appendChild(scoreboard);
+}
+
+function renderControlsPanel() {
+    controlsPanel.innerHTML = "";
+    const exp = document.createElement("button"); exp.textContent = "Export JSON"; exp.onclick = doExport;
+    const imp = document.createElement("input"); imp.type = "file"; imp.accept = "application/json"; imp.onchange = (e) => {
+        const f = (e.target as HTMLInputElement).files?.[0]; if (!f) return; doImport(f);
+    };
+    const setPw = document.createElement("button"); setPw.textContent = "Set Admin Password"; setPw.onclick = setAdminPassword;
+    const logs = document.createElement("button"); logs.textContent = "Open Admin Logs"; logs.onclick = openAdminLogs;
+    controlsPanel.appendChild(exp); controlsPanel.appendChild(document.createTextNode(" "));
+    controlsPanel.appendChild(imp); controlsPanel.appendChild(document.createElement("br"));
+    controlsPanel.appendChild(setPw); controlsPanel.appendChild(document.createTextNode(" "));
+    controlsPanel.appendChild(logs);
+}
+
+/* ========== bootstrap ========== */
+renderAll();
+(window as any).appData = data; // for debugging in console
