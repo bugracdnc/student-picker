@@ -5,7 +5,7 @@ export interface Student {
     name: string;
     status: Status;
     participationCount: number;         // total times participated
-    score:number;                       // plus/minus score
+    score: number;                       // plus/minus score
     hasParticipatedThisRound?: boolean; // session flag
 }
 
