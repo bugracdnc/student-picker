@@ -1,13 +1,23 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Student Picker</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+<div id="app">
+    <header style="padding:12px;background:#f2f2f2">
+        <h1>Student Picker</h1>
+        <div id="controlsPanel"></div>
+    </header>
+    <main style="display:flex;gap:12px;padding:12px">
+        <section id="classesPanel" style="width:200px;border-right:1px solid #ddd;padding-right:12px"></section>
+        <section id="studentsPanel" style="width:360px;border-right:1px solid #ddd;padding-right:12px"></section>
+        <section id="mainPanel" style="flex:1"></section>
+    </main>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>
