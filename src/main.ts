@@ -1,6 +1,6 @@
 // src/main.ts
-import type {AppData, ClassItem, Status, Student} from "./models";
-import {exportDataFile, importDataFile, loadData, saveData} from "./storage";
+import type { AppData, ClassItem, Status, Student } from "./models";
+import { exportDataFile, importDataFile, loadData, saveData } from "./storage";
 
 /*const app = document.getElementById("app")!;*/
 const classesPanel = document.getElementById("classesPanel")!;
@@ -28,7 +28,7 @@ function persist() {
 /* ========== Core actions ========== */
 
 function addClass(name: string) {
-    const c: ClassItem = {id: uid(), name, students: []};
+    const c: ClassItem = { id: uid(), name, students: [] };
     data.classes.push(c);
     currentClassId = c.id;
     persist();
@@ -80,7 +80,7 @@ function pickRandomFromCurrent(): Student | null {
     const chosen = available[idx];
     chosen.hasParticipatedThisRound = true;
     chosen.participationCount++;
-    data.logs.push({type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO()});
+    data.logs.push({ type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO() });
     persist();
     return chosen;
 }
@@ -91,7 +91,28 @@ function updateScore(classId: string, studentId: string, delta: number) {
     const s = cls.students.find(x => x.id === studentId);
     if (!s) return;
     s.score += delta;
-    data.logs.push({type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO()});
+    data.logs.push({ type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO() });
+    persist();
+}
+
+function markPresent(classId: string) {
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    cls.students.forEach(s => s.status = "present" as Status);
+    persist();
+}
+
+function markAbsent(classId: string) {
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    cls.students.forEach(s => s.status = "absent" as Status);
+    persist();
+}
+
+function markSkipped(classId: string) {
+    const cls = data.classes.find(c => c.id === classId);
+    if (!cls) return;
+    cls.students.forEach(s => s.status = "skipped" as Status);
     persist();
 }
 
@@ -153,7 +174,7 @@ const ADMIN_KEY = "student-picker-admin-pw";
 }*/
 
 function escapeHtml(s = "") {
-    return s.replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]!));
+    return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
 /* ========== Rendering ========== */
@@ -210,11 +231,24 @@ function renderStudentsPanel() {
     const title = document.createElement("h3");
     title.textContent = "Students";
     studentsPanel.appendChild(title);
+    const markAllPresent = document.createElement("button");
+    const markAllAbsent = document.createElement("button");
+    const markAllSkipped = document.createElement("button");
+    markAllPresent.textContent = "Mark All Present";
+    markAllPresent.onclick = () => markPresent(cls.id);
+    markAllAbsent.textContent = "Mark All Absent";
+    markAllAbsent.onclick = () => markAbsent(cls.id);
+    markAllSkipped.textContent = "Mark All Skipped";
+    markAllSkipped.onclick = () => markSkipped(cls.id);
+    studentsPanel.appendChild(markAllPresent);
+    studentsPanel.appendChild(markAllAbsent);
+    studentsPanel.appendChild(markAllSkipped);
     if (!currentClassId) {
         studentsPanel.appendChild(document.createTextNode("No class selected"));
         return;
     }
-    const cls = data.classes.find(c => c.id === currentClassId)!;
+    const cls = data.classes.find(c => c.id === currentClassId)!
+    cls.students = cls.students.sort((s1, s2) => Number(s1.name.substring(0, 3)) - Number(s2.name.substring(0, 3)));
 
     const list = document.createElement("ul");
     cls.students.forEach(s => {
