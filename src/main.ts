@@ -250,13 +250,17 @@ function renderStudentsPanel() {
     const cls = data.classes.find(c => c.id === currentClassId)!
     cls.students = cls.students.sort((s1, s2) => Number(s1.name.substring(0, 3)) - Number(s2.name.substring(0, 3)));
 
-    const list = document.createElement("ul");
+    const list = document.createElement("list");
     cls.students.forEach(s => {
         const li = document.createElement("li");
-        li.className = "student-row";
-        li.innerHTML = `<span class="student-name">${escapeHtml(s.name)}</span>`;
+        li.className="student-card"
+
+        const info = document.createElement("div")
+        info.className="card-header";
+        info.innerHTML = `<span class="student-name">${escapeHtml(s.name)}</span>`;
         // status select
         const sel = document.createElement("select");
+        sel.style="width:auto";
         ["present", "absent", "skipped"].forEach(st => {
             const o = document.createElement("option");
             o.value = st;
@@ -265,32 +269,39 @@ function renderStudentsPanel() {
             sel.appendChild(o);
         });
         sel.onchange = () => setStatus(cls.id, s.id, sel.value as Status);
-        li.appendChild(document.createTextNode(" "));
-        li.appendChild(sel);
-        li.appendChild(document.createTextNode(`${s.score}/${s.participationCount}`))
+        info.appendChild(document.createTextNode(" "));
+        info.appendChild(sel);
+        info.appendChild(document.createTextNode(`${s.score}/${s.participationCount}`))
 
         // + / - score
+        const container = document.createElement("div");
+        container.className="card-footer"
         const plus = document.createElement("button");
+        plus.className="btn-square add";
         plus.textContent = "+";
         plus.onclick = () => updateScore(cls.id, s.id, 1);
         const minus = document.createElement("button");
+        minus.className="btn-square sub";
         minus.textContent = "−";
         minus.onclick = () => updateScore(cls.id, s.id, -1);
-        li.appendChild(document.createTextNode(" "));
-        li.appendChild(plus);
-        li.appendChild(minus);
+        container.appendChild(document.createTextNode(" "));
+        container.appendChild(plus);
+        container.appendChild(minus);
 
         // delete student
         const del = document.createElement("button");
+        del.className="btn-square del";
         del.textContent = "✕";
         del.style.marginLeft = "8px";
         del.style.color = "#F00";
         del.onclick = () => {
             if (confirm(`Delete "${s.name}"?`)) removeStudent(cls.id, s.id);
         };
-        li.appendChild(del);
+        container.appendChild(del);
 
-        list.appendChild(li);
+        li.appendChild(info);
+        li.appendChild(container);
+        list.appendChild(li)
     });
     studentsPanel.appendChild(list);
 
