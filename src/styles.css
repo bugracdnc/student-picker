@@ -2,24 +2,47 @@
 
 /* --- 1. Variables & Theme --- */
 :root {
-  --primary: #4f46e5;       /* Indigo 600 */
-  --primary-hover: #4338ca; /* Indigo 700 */
-  --bg-body: #f3f4f6;       /* Gray 100 */
-  --bg-panel: #ffffff;      /* White */
-  --text-main: #111827;     /* Gray 900 */
-  --text-muted: #6b7280;    /* Gray 500 */
-  --border: #e5e7eb;        /* Gray 200 */
+  --primary: #28428a; /* Indigo 600 */
+  --primary-hover: #26378f; /* Indigo 700 */
+  --bg-body: #000000; /* Gray 100 */
+  --bg-panel: #161616; /* White */
+  --bg-panel-dark: #111; /* White */
+  --panel-items: #060606;
+  --text-main: #e6e6e6; /* Gray 900 */
+  --text-muted: #949494; /* Gray 500 */
+  --border: #161616; /* Gray 200 */
   --radius: 12px;
-  --danger: #ef4444;        /* Red 500 */
-  --success: #10b981;       /* Green 500 */
+  --danger: #ef4444; /* Red 500 */
+  --success: #10b981; /* Green 500 */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.participated {
+  color: #10325f;
+}
+
+.absent {
+  color: #5f5f5f;
+}
+
+.skipped {
+  color: #662323;
+}
+
+.active {
+  color: #67e974;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   background-color: var(--bg-body);
   color: var(--text-main);
   height: 100vh;
@@ -39,16 +62,30 @@ body {
 
 /* Header */
 #header {
-  background: var(--bg-panel);
+  background: var(--bg-body);
   border-bottom: 1px solid var(--border);
   padding: 0 1.5rem;
-  height: 60px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
 }
-#header h1 { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+#header h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  padding: 1rem;
+}
+
+#header > .header-container > #controlsPanel {
+  padding-bottom: 1rem;
+}
+
+#header > .header-container > #controlsPanel > input,
+#header > .header-container > #controlsPanel > button {
+  padding: 5px;
+}
 
 #header > .label-container {
   position: fixed;
@@ -68,7 +105,7 @@ body {
 /* --- 3. LEFT PANEL: Classes --- */
 #classesPanel {
   grid-area: classes;
-  background: #f9fafb; /* Slightly darker than white */
+  background: var(--bg-panel); /* Slightly darker than white */
   border-right: 1px solid var(--border);
   padding: 1.5rem;
   overflow-y: auto;
@@ -87,8 +124,9 @@ body {
 }
 
 /* Class List Items */
-#classesPanel > div, #classesPanel li {
-  background: var(--bg-panel);
+#classesPanel > div,
+#classesPanel li {
+  background: var(--panel-items);
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -100,23 +138,30 @@ body {
   transition: border-color 0.2s;
   cursor: pointer;
 }
-#classesPanel > div:hover { border-color: var(--primary); }
+#classesPanel > div:hover {
+  border-color: var(--primary);
+}
 
 /* Small Delete Button */
 #classesPanel button {
   padding: 4px 8px;
   font-size: 0.75rem;
-  background: transparent;
+  background: var(--panel-items);
   color: var(--text-muted);
   border: 1px solid var(--border);
   border-radius: 4px;
+  height: 36px;
 }
-#classesPanel button:hover { background: #fee2e2; color: var(--danger); border-color: var(--danger); }
+#classesPanel button:hover {
+  background: var(--panel-items);
+  color: var(--danger);
+  border-color: var(--danger);
+}
 
 /* --- 4. CENTER PANEL: The Stage --- */
 #mainPanel {
   grid-area: picker;
-  background: var(--bg-panel);
+  background: var(--bg-panel-dark);
   padding: 3rem 2rem;
   display: flex;
   flex-direction: column;
@@ -129,6 +174,7 @@ body {
   font-size: 1.1rem;
   font-weight: 600;
   padding: 0.8rem 2rem;
+  margin-top: 1rem;
   border-radius: 50px; /* Pill shape */
   border: none;
   background-color: var(--primary);
@@ -138,8 +184,18 @@ body {
   transition: transform 0.1s, background-color 0.2s;
   margin-bottom: 1rem;
 }
-#mainPanel button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-#mainPanel button:active { transform: scale(0.98); }
+
+#mainPanel > #resetbtn {
+  background-color: #6e4f4f;
+}
+
+#mainPanel button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+#mainPanel button:active {
+  transform: scale(0.98);
+}
 
 /* Scoreboard */
 #mainPanel ul {
@@ -149,7 +205,7 @@ body {
   list-style: none;
 }
 #mainPanel li {
-  padding: 1rem;
+  padding: 0.2rem;
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
@@ -159,7 +215,7 @@ body {
 /* --- 5. RIGHT PANEL: Student Cards (FINALIZED) --- */
 #studentsPanel {
   grid-area: students;
-  background: #f9fafb;
+  background: var(--bg-panel);
   border-left: 1px solid var(--border);
   padding: 1.5rem;
   overflow-y: auto;
@@ -172,7 +228,7 @@ body {
 #studentsPanel > button {
   width: 100%;
   padding: 0.6rem;
-  background: white;
+  background: var(--panel-items);
   border: 1px solid var(--border);
   border-radius: 6px;
   font-weight: 500;
@@ -180,18 +236,26 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-#studentsPanel > button:hover { border-color: var(--primary); color: var(--primary); }
+#studentsPanel > button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
 
 /* --- THE STUDENT CARD STYLE --- */
 .student-card {
-  background: white;
+  background: var(--panel-items);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 1rem;
+  margin-top: 1rem;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.student-card > .card-header > select {
+  padding: 5px;
 }
 
 /* Row 1: Name & Status */
@@ -201,13 +265,16 @@ body {
   align-items: center;
   gap: 0.5rem;
 }
-.student-name { font-weight: 700; font-size: 0.95rem; }
+.student-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
 .status-select {
   padding: 4px 8px;
   font-size: 0.85rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background-color: #f9fafb;
+  background-color: #000;
   outline: none;
 }
 
@@ -216,7 +283,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #000;
   padding-top: 0.75rem;
 }
 .score-text {
@@ -233,11 +300,11 @@ body {
 
 /* Square Buttons */
 .btn-square {
-  width: 28px;
-  height: 28px;
+  width: 64px;
+  height: 36px;
   border-radius: 6px;
   border: 1px solid var(--border);
-  background: white;
+  background: var(--panel-items);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,11 +316,15 @@ body {
 }
 
 /* Button Colors */
-.btn-square:hover { border-color: var(--primary); color: var(--primary); background: #e0e7ff; }
+.btn-square:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--panel-items);
+}
 
 /* Specific style for Delete (X) button */
 .btn-square.del:hover {
   border-color: var(--danger);
   color: var(--danger);
-  background: #fee2e2;
+  background: var(--panel-items);
 }
