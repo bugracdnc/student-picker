@@ -195,6 +195,10 @@ function renderClassesPanel() {
     const ul = document.createElement("ul");
     data.classes.forEach(c => {
         const li = document.createElement("li");
+        li.onclick = () => {
+            currentClassId = c.id;
+            renderAll();
+        };
         li.style.marginBottom = "6px";
         const btn = document.createElement("button");
         btn.textContent = (currentClassId === c.id ? "• " : "") + c.name;
@@ -253,14 +257,14 @@ function renderStudentsPanel() {
     const list = document.createElement("list");
     cls.students.forEach(s => {
         const li = document.createElement("li");
-        li.className="student-card"
+        li.className = "student-card"
 
         const info = document.createElement("div")
-        info.className="card-header";
+        info.className = "card-header";
         info.innerHTML = `<span class="student-name">${escapeHtml(s.name)}</span>`;
         // status select
         const sel = document.createElement("select");
-        sel.style="width:auto";
+        sel.style = "width:auto";
         ["present", "absent", "skipped"].forEach(st => {
             const o = document.createElement("option");
             o.value = st;
@@ -275,13 +279,13 @@ function renderStudentsPanel() {
 
         // + / - score
         const container = document.createElement("div");
-        container.className="card-footer"
+        container.className = "card-footer"
         const plus = document.createElement("button");
-        plus.className="btn-square add";
+        plus.className = "btn-square add";
         plus.textContent = "+";
         plus.onclick = () => updateScore(cls.id, s.id, 1);
         const minus = document.createElement("button");
-        minus.className="btn-square sub";
+        minus.className = "btn-square sub";
         minus.textContent = "−";
         minus.onclick = () => updateScore(cls.id, s.id, -1);
         container.appendChild(document.createTextNode(" "));
@@ -290,7 +294,7 @@ function renderStudentsPanel() {
 
         // delete student
         const del = document.createElement("button");
-        del.className="btn-square del";
+        del.className = "btn-square del";
         del.textContent = "✕";
         del.style.marginLeft = "8px";
         del.style.color = "#F00";
@@ -347,6 +351,7 @@ function renderMainPanel() {
 
     const resetBtn = document.createElement("button");
     resetBtn.textContent = "Reset round";
+    resetBtn.id = "resetbtn";
     resetBtn.style.marginLeft = "8px";
     resetBtn.onclick = () => {
         if (!confirm("Clear this round (mark everyone as not participated)?")) return;
@@ -364,18 +369,19 @@ function renderMainPanel() {
     // Scoreboard (sorted)
     const scoreboard = document.createElement("div");
     scoreboard.innerHTML = `<h4>Scoreboard</h4>`;
+    const ulist = document.createElement("ul");
     const sorted = [...cls.students].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
     sorted.forEach(s => {
-        const r = document.createElement("div");
+        const r = document.createElement("li");
         r.style.marginBottom = "8px";
-        if (s.hasParticipatedThisRound) r.style.color = "#2878e0";
-        else if (s.status.toString() === "absent") r.style.color = "#ccc";
-        else if (s.status.toString() === "skipped") r.style.color = "#cf3232";
-        else r.style.color = "#179123";
+        if (s.hasParticipatedThisRound) r.className = "participated";
+        else if (s.status.toString() === "absent") r.className = "absent";
+        else if (s.status.toString() === "skipped") r.className = "skipped";
+        else r.className = "active";
         r.innerHTML = ` • ${escapeHtml(s.name)} — ${s.score}/${s.participationCount}`;
-        scoreboard.appendChild(r);
+        ulist.appendChild(r);
     });
-
+    scoreboard.appendChild(ulist);
     col.appendChild(scoreboard);
     mainPanel.appendChild(col);
 }
