@@ -1,5 +1,7 @@
 export type Status = "present" | "absent" | "skipped";
 
+export const STATUSES: Status[] = ["present", "absent", "skipped"];
+
 export interface Student {
     id: string;
     name: string;
