@@ -2,10 +2,6 @@ import type { AppData } from "./models.ts"
 
 const KEY = "student-picker:v1";
 
-function nowISO() {
-    return new Date().toISOString();
-}
-
 export function loadData(): AppData {
     const raw = localStorage.getItem(KEY);
     if (!raw) {
@@ -23,27 +19,20 @@ export function saveData(data: AppData) {
     localStorage.setItem(KEY, JSON.stringify(data));
 }
 
-export function exportDataFile(data: AppData) {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+export function downloadFile(filename: string, content: string, mime = "application/json") {
+    const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "student-picker-data-" + nowISO().slice(0, -14) + ".json";
+    a.download = filename;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function importDataFile(file: File): Promise<AppData> {
+export function readFileText(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
         const r = new FileReader();
-        r.onload = () => {
-            try {
-                const parsed = JSON.parse(String(r.result));
-                resolve(parsed);
-            } catch (error) {
-                reject(error);
-            }
-        };
+        r.onload = () => resolve(String(r.result));
         r.onerror = () => reject(r.error);
         r.readAsText(file);
     })
