@@ -34,7 +34,7 @@ Choose **one** of the options below. If you are not sure, start with **Option 1*
 The easiest way if you know the computer's administrator password.
 
 1. Open this page: **<https://github.com/bugracdnc/student-picker/releases>**
-2. Under the newest release, in the **Assets** list, click the file whose name ends in **`.deb`** (e.g. `student-picker_0.1.0~alpha.1_all.deb`). It downloads.
+2. Under the newest release, in the **Assets** list, click the file whose name ends in **`.deb`** (e.g. `student-picker_0.1.0.alpha.1_all.deb`). It downloads.
 3. Open your **Downloads** folder and **double-click** the file.
 4. In the **Pardus Package Installer** window press **Install**, and enter the administrator password if asked.
 5. Done! Open the applications menu and type **Student Picker** to find it.

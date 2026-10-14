@@ -34,7 +34,7 @@ Size uyan **bir** yolu seçin. Hangisini seçeceğinizden emin değilseniz **1. 
 Bilgisayarın yönetici şifresini biliyorsanız en kolay yol budur.
 
 1. Şu sayfayı açın: **<https://github.com/bugracdnc/student-picker/releases>**
-2. En üstteki sürümün altında, **Assets** başlığındaki adı **`.deb`** ile biten dosyaya tıklayın (ör. `student-picker_0.1.0~alpha.1_all.deb`). Dosya indirilir.
+2. En üstteki sürümün altında, **Assets** başlığındaki adı **`.deb`** ile biten dosyaya tıklayın (ör. `student-picker_0.1.0.alpha.1_all.deb`). Dosya indirilir.
 3. **İndirilenler** klasörünü açıp indirdiğiniz dosyaya **çift tıklayın**.
 4. Açılan **Pardus Paket Yükleyici** penceresinde **Yükle** düğmesine basın ve şifre sorulursa yönetici şifresini girin.
 5. Bitti! Uygulama menüsünü açıp **Öğrenci Seçici** yazarak uygulamayı bulabilirsiniz.
