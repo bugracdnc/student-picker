@@ -13,7 +13,9 @@ function readLang(): Lang {
         const saved = localStorage.getItem(LANG_KEY);
         if (saved && saved in translations) return saved as Lang;
     } catch { /* ignore */ }
-    return DEFAULT_LANG;
+    // First visit: follow the browser's language when we have it.
+    const preferred = (navigator.languages ?? [navigator.language]).map(l => l.slice(0, 2)).find(l => l in translations);
+    return (preferred as Lang | undefined) ?? DEFAULT_LANG;
 }
 
 export function getLang(): Lang {

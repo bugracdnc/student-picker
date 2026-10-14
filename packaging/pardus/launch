@@ -1,0 +1,14 @@
+#!/bin/sh
+# Opens Student Picker in a browser window.
+# Firefox comes first because it ships with Pardus: always using the same
+# browser keeps saved classes in one place (they live in browser storage).
+HERE=$(dirname "$(readlink -f "$0")")
+PAGE="$HERE/student-picker.html"
+
+for b in firefox firefox-esr; do
+    command -v "$b" >/dev/null 2>&1 && exec "$b" --new-window "$PAGE"
+done
+for b in chromium chromium-browser google-chrome google-chrome-stable; do
+    command -v "$b" >/dev/null 2>&1 && exec "$b" --app="file://$PAGE"
+done
+exec xdg-open "$PAGE"

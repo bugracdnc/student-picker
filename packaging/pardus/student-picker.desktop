@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Student Picker
+Name[tr]=Öğrenci Seçici
+GenericName=Random student picker
+GenericName[tr]=Rastgele öğrenci seçici
+Comment=Fair turns for every student
+Comment[tr]=Her öğrenciye adil söz hakkı
+Exec=@LAUNCH@
+Icon=@ICON@
+Terminal=false
+Categories=Education;
+Keywords=student;class;random;picker;öğrenci;sınıf;kura;seçici;
+StartupNotify=true

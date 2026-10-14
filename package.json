@@ -1,16 +1,17 @@
 {
   "name": "student-picker",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && mv dist/index.html dist/student-picker.html",
+    "release": "sh scripts/release.sh",
     "preview": "vite preview"
   },
   "devDependencies": {
     "typescript": "~5.8.3",
     "vite": "^7.1.6",
-    "vite-plugin-singlefile": "^2.3.0"
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }
