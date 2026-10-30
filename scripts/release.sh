@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (C) 2026 Buğra Çalışkandinç
 # Builds release files into release/:
 #   student-picker.html                     the whole app in one file
@@ -25,11 +25,11 @@ install -d "$ROOT/DEBIAN" "$ROOT/usr/bin" "$ROOT/usr/share/student-picker" \
     "$ROOT/usr/share/applications" "$ROOT/usr/share/icons/hicolor/scalable/apps" \
     "$ROOT/usr/share/doc/student-picker"
 install -m 644 "$OUT/student-picker.html" "$ROOT/usr/share/student-picker/"
-# Debian has no AGPL in /usr/share/common-licenses, so the full text goes in the copyright file
+# Debian has no PolyForm license in /usr/share/common-licenses, so the full text goes in the copyright file
 {
     cat "$P/copyright"
     echo
-    echo "License: AGPL-3.0-or-later"
+    echo "License: PolyForm-Noncommercial-1.0.0"
     sed -e 's/^[[:space:]]*$/./' -e 's/^/ /' LICENSE
 } > "$ROOT/usr/share/doc/student-picker/copyright"
 chmod 644 "$ROOT/usr/share/doc/student-picker/copyright"

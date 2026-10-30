@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (C) 2026 Buğra Çalışkandinç
 # Removes a per-user Student Picker install made by kur.sh.
 # Saved classes live in the browser and are NOT deleted; reinstalling brings them back.

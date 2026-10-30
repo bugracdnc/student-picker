@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (C) 2026 Buğra Çalışkandinç
 // Reusable UI primitives: toasts, modal dialogs, popover menus, clipboard.
 import { h, icon, type Child, type IconName } from "./dom";

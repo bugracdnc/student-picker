@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (C) 2026 Buğra Çalışkandinç
 // All user-facing text lives here.
 //
@@ -14,7 +14,7 @@ const en = {
     // App
     "app.name": "Student Picker",
     "app.tagline": "Fair turns for every student",
-    "app.license": "Free software under AGPL-3.0",
+    "app.license": "Free for education and personal use · PolyForm Noncommercial 1.0.0",
     "app.source": "Source",
 
     // Common
@@ -211,7 +211,7 @@ const tr: Record<MessageKey, Message> = {
     // Uygulama
     "app.name": "Öğrenci Seçici",
     "app.tagline": "Her öğrenciye adil söz hakkı",
-    "app.license": "AGPL-3.0 lisanslı özgür yazılım",
+    "app.license": "Eğitim ve kişisel kullanım için ücretsiz · PolyForm Noncommercial 1.0.0",
     "app.source": "Kaynak kod",
 
     // Genel

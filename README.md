@@ -43,8 +43,25 @@ npm run release   # release/: html, .deb, offline tarball, kur.sh
 
 ## License / Lisans
 
-Student Picker is free software under the [GNU Affero General Public License v3.0 or later](LICENSE) (AGPL-3.0-or-later). Anyone may use, study, modify and share it. If you share a modified version, including by hosting it on a website, you must make its source code available under the same license.
+Student Picker is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
 
-Öğrenci Seçici, [GNU Affero Genel Kamu Lisansı v3.0 veya sonrası](LICENSE) (AGPL-3.0-or-later) ile lisanslanmış özgür bir yazılımdır. Herkes onu kullanabilir, inceleyebilir, değiştirebilir ve paylaşabilir. Değiştirilmiş bir sürümü paylaşırsanız (bir web sitesinde yayınlamak dahil), kaynak kodunu aynı lisansla açık tutmanız gerekir.
+- It is free for teachers, students, schools (state and private) and personal use. The source code is public, so anyone can read it and learn from it.
+- **Additional permission:** teachers may use it in any lesson, including paid private tutoring.
+- Not permitted: selling or renting copies, paid subscriptions or paid hosted versions, ads, bundling it into paid products, paid installation packages, or any other way of making money from the software or from modified versions of it.
+- Modified versions must keep the Required Notice from the [LICENSE](LICENSE) file and may only be shared noncommercially.
+- Contributors: by contributing, you agree that your contribution may be relicensed by the project maintainer.
 
-Copyright (C) 2026 Buğra Çalışkandinç
+Öğrenci Seçici, [PolyForm Noncommercial Lisansı 1.0.0](LICENSE) ile lisanslanmıştır.
+
+- Öğretmenler, öğrenciler, okullar (devlet ve özel) ve kişisel kullanım için ücretsizdir. Kaynak kodu herkese açıktır; herkes okuyup ondan öğrenebilir.
+- **Ek izin:** Öğretmenler onu, ücretli özel dersler dahil her derste kullanabilir.
+- İzin verilmeyenler: kopyalarını satmak veya kiralamak, ücretli abonelik ya da ücretli barındırılan sürümler, reklam, ücretli ürünlere eklemek, ücretli kurulum paketleri veya yazılımdan ya da değiştirilmiş sürümlerinden başka herhangi bir yolla para kazanmak.
+- Değiştirilmiş sürümler [LICENSE](LICENSE) dosyasındaki Required Notice (Zorunlu Bildirim) satırını korumalıdır ve yalnızca ticari olmayan amaçlarla paylaşılabilir.
+- Katkıda bulunanlar: Katkıda bulunarak, katkınızın proje sorumlusu tarafından yeniden lisanslanabileceğini kabul etmiş olursunuz.
+
+Required Notice: Copyright (C) 2026 Buğra Çalışkandinç — Student Picker (https://github.com/bugracdnc/student-picker)
+
+### License history / Lisans geçmişi
+
+- Commits up to `27f75b6` were briefly published under AGPL-3.0-or-later on 2026-10-30. From 0.1.0-alpha.2 onward the project is licensed under PolyForm Noncommercial 1.0.0.
+- `27f75b6` dahil olmak üzere o commit'e kadarki sürümler 2026-10-30 tarihinde kısa bir süre AGPL-3.0-or-later lisansıyla yayımlandı. 0.1.0-alpha.2 sürümünden itibaren proje PolyForm Noncommercial 1.0.0 ile lisanslanmıştır.

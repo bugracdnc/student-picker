@@ -1,8 +1,8 @@
 {
   "name": "student-picker",
   "private": true,
-  "version": "0.1.0-alpha.1",
-  "license": "AGPL-3.0-or-later",
+  "version": "0.1.0-alpha.2",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Buğra Çalışkandinç",
   "type": "module",
   "scripts": {

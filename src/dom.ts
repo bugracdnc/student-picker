@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (C) 2026 Buğra Çalışkandinç
 // Tiny DOM helpers: element builder + inline SVG icon set.
 
