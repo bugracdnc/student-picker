@@ -40,3 +40,11 @@ npm run release   # release/: html, .deb, offline tarball, kur.sh
 3. `gh release create v<version> --prerelease release/*`
 
 `kur.sh` installs whatever the newest release on GitHub is (pre-releases included), so existing users update by running it again.
+
+## License / Lisans
+
+Student Picker is free software under the [GNU Affero General Public License v3.0 or later](LICENSE) (AGPL-3.0-or-later). Anyone may use, study, modify and share it. If you share a modified version, including by hosting it on a website, you must make its source code available under the same license.
+
+Öğrenci Seçici, [GNU Affero Genel Kamu Lisansı v3.0 veya sonrası](LICENSE) (AGPL-3.0-or-later) ile lisanslanmış özgür bir yazılımdır. Herkes onu kullanabilir, inceleyebilir, değiştirebilir ve paylaşabilir. Değiştirilmiş bir sürümü paylaşırsanız (bir web sitesinde yayınlamak dahil), kaynak kodunu aynı lisansla açık tutmanız gerekir.
+
+Copyright (C) 2026 Buğra Çalışkandinç

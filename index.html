@@ -1,4 +1,11 @@
 <!doctype html>
+<!--
+  Student Picker / Öğrenci Seçici
+  SPDX-License-Identifier: AGPL-3.0-or-later
+  Copyright (C) 2026 Buğra Çalışkandinç
+  Free software under the GNU AGPL v3 or later: https://www.gnu.org/licenses/agpl-3.0.html
+  Source code: https://github.com/bugracdnc/student-picker
+-->
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="utf-8"/>
@@ -28,6 +35,11 @@
         <section id="mainPanel" class="panel stage" aria-label="Picker"></section>
         <section id="studentsPanel" class="panel" aria-label="Students"></section>
     </main>
+    <footer id="appFooter" class="app-footer">
+        <span id="licenseText">Free software under AGPL-3.0</span> ·
+        <span id="sourceLabel">Source</span>:
+        <a href="https://github.com/bugracdnc/student-picker" target="_blank" rel="noopener">github.com/bugracdnc/student-picker</a>
+    </footer>
 </div>
 <div id="toasts" class="toasts" aria-live="polite"></div>
 <script src="/src/main.ts" type="module"></script>

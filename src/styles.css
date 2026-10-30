@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later
+ * Copyright (C) 2026 Buğra Çalışkandinç */
 /* src/styles.css */
 
 /* ========== 1. Tokens ========== */
@@ -248,6 +250,21 @@ kbd {
   grid-template-areas: "classes stage students";
   gap: 14px;
   padding: 0 16px 16px;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  padding: 0 20px 10px;
+  margin-top: -6px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+.app-footer a {
+  color: inherit;
+}
+.app-footer a:hover {
+  color: var(--text-2);
 }
 
 #classesPanel { grid-area: classes; }

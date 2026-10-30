@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 export type Status = "present" | "absent" | "skipped";
 
 export const STATUSES: Status[] = ["present", "absent", "skipped"];

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 // Cloning, export payloads and import detection for classes / students / full backups.
 import type { AppData, ClassItem, Status, Student } from "./models";
 import { STATUSES } from "./models";

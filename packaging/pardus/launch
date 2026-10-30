@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Buğra Çalışkandinç
 # Opens Student Picker in a browser window.
 # Firefox comes first because it ships with Pardus: always using the same
 # browser keeps saved classes in one place (they live in browser storage).

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 // src/main.ts
 import type { AppData, ClassItem, Status, Student } from "./models";
 import { STATUSES } from "./models";
@@ -597,6 +599,8 @@ function renderChrome() {
     document.title = t("app.name");
     document.getElementById("brandName")!.textContent = t("app.name");
     document.getElementById("brandTagline")!.textContent = t("app.tagline");
+    document.getElementById("licenseText")!.textContent = t("app.license");
+    document.getElementById("sourceLabel")!.textContent = t("app.source");
     classesPanel.setAttribute("aria-label", t("classes.title"));
     studentsPanel.setAttribute("aria-label", t("students.title"));
 }

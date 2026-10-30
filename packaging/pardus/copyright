@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: student-picker
+Upstream-Contact: Buğra Çalışkandinç <bugracaliskandinc@gmail.com>
+Source: https://github.com/bugracdnc/student-picker
+
+Files: *
+Copyright: 2026 Buğra Çalışkandinç
+License: AGPL-3.0-or-later

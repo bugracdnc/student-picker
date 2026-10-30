@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 import type { AppData } from "./models.ts"
 
 const KEY = "student-picker:v1";

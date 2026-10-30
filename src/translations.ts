@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 // All user-facing text lives here.
 //
 // - `en` is the reference language: every key must exist there.
@@ -12,6 +14,8 @@ const en = {
     // App
     "app.name": "Student Picker",
     "app.tagline": "Fair turns for every student",
+    "app.license": "Free software under AGPL-3.0",
+    "app.source": "Source",
 
     // Common
     "common.cancel": "Cancel",
@@ -207,6 +211,8 @@ const tr: Record<MessageKey, Message> = {
     // Uygulama
     "app.name": "Öğrenci Seçici",
     "app.tagline": "Her öğrenciye adil söz hakkı",
+    "app.license": "AGPL-3.0 lisanslı özgür yazılım",
+    "app.source": "Kaynak kod",
 
     // Genel
     "common.cancel": "İptal",

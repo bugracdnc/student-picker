@@ -2,6 +2,8 @@
   "name": "student-picker",
   "private": true,
   "version": "0.1.0-alpha.1",
+  "license": "AGPL-3.0-or-later",
+  "author": "Buğra Çalışkandinç",
   "type": "module",
   "scripts": {
     "dev": "vite",

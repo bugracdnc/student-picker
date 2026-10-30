@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Buğra Çalışkandinç
 // Tiny DOM helpers: element builder + inline SVG icon set.
 
 export type Child = Node | string | number | null | undefined | false | Child[];
