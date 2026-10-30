@@ -7,6 +7,21 @@ Working notes so the presentation can be picked up later.
 - **Simulation:** `sim.py` (`python3 sim.py`, no dependencies)
 - **Started:** 2026-10-30
 
+## Setup and conventions
+
+- This folder is the **private** repo `bugracdnc/student-picker-presentation` (branch `main`). Keep the presentation off the public `student-picker` repo: no commits there, no submodule (a `.gitmodules` would reveal this repo's name and URL).
+- On a new device, inside the app folder:
+
+  ```sh
+  git clone https://github.com/bugracdnc/student-picker  # if not there yet
+  cd student-picker
+  git clone https://github.com/bugracdnc/student-picker-presentation presentation
+  echo "presentation/" >> .git/info/exclude              # local-only ignore
+  ```
+
+- Start Claude in the app folder (`student-picker/`) and say “continue the presentation, read `presentation/NOTES.md` first”. Run git for presentation work inside `presentation/`.
+- The live deck is the current version: if slides were edited in the browser, read the deck before changing anything, and copy changes back into `deck/project/` when committing.
+
 ## Brief
 
 - ~10 minutes, **Turkish** slides and speaker notes
@@ -83,3 +98,5 @@ Assumptions: hand raising per question: 5 dominant students 85%, 10 moderate 35%
 ## Log
 
 - 2026-10-30: Brief settled (Turkish, simulation + research, web deck). Simulation run. All 15 slides written and published. Waiting on screenshots, photo, AI image, cover details, personal story.
+- 2026-10-30: Moved the presentation into this private repo (kept out of the public app repo; no submodule). Added setup steps for other devices.
+- **Next:** work through the TODO list. Send screenshots/photos/images and they go into slides 2, 7, 8, 14; fill the cover and slide 9 story; add the QR code.
