@@ -20,6 +20,9 @@ Working notes so the presentation can be picked up later.
   ```
 
 - Start Claude in the app folder (`student-picker/`) and say “continue the presentation, read `presentation/NOTES.md` first”. Run git for presentation work inside `presentation/`.
+- **Chat logs and Claude's memory notes** sync through this repo: `chats/` holds each Claude Code session as Markdown, `claude-memory/` a copy of Claude's memory notes for this project.
+  - Before closing a session: `python3 presentation/tools/sync-chats.py` (exports, commits, pushes).
+  - On another device, after cloning: `python3 presentation/tools/sync-chats.py --restore-memory` (pulls and puts the memory notes where Claude Code looks for them). Run the normal sync there too, so chats from every device end up here.
 - The live deck is the current version: if slides were edited in the browser, read the deck before changing anything, and copy changes back into `deck/project/` when committing.
 
 ## Brief
