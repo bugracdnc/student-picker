@@ -27,10 +27,11 @@
   const tick = () => cue(3200, 0.018, VOL.tick);
 
   const edgesAbove = () => slides.filter(s => s.getBoundingClientRect().top < innerHeight / 2).length;
-  let edges = edgesAbove();
+  let edges = edgesAbove(), resized = 0;
+  addEventListener('resize', () => { resized = performance.now(); });
   addEventListener('scroll', () => {
     const e = edgesAbove();
-    if (e !== edges) { edges = e; tick(); }
+    if (e !== edges) { edges = e; if (performance.now() - resized > 400) tick(); }   // no tick for the fullscreen re-align
   }, { capture: true, passive: true });
   console.assert(edges >= 1, 'paper cues: first page counted');
 })();
@@ -109,11 +110,14 @@
       return seen > a.seen ? { s, seen } : a;
     }, { s: null, seen: -1 }).s;
   }
+  let page = slides[0];             // the page the paper rests on (or is gliding to)
   function settle() {
     if (touching) return;
-    const best = current();
+    const best = current(); page = best;
     if (best && Math.abs(best.getBoundingClientRect().top) > 2) best.scrollIntoView({ behavior: 'smooth' });
   }
+  // fullscreen / window resize changes the page height, so the old scroll offset lands between pages: put the same page back
+  addEventListener('resize', () => { clearTimeout(timer); page.scrollIntoView({ behavior: 'instant' }); });
   function arm() { clearTimeout(timer); timer = setTimeout(settle, 180); }
   addEventListener('scroll', arm, { capture: true, passive: true });
   console.assert(slides.length > 0, 'settle: slides found');

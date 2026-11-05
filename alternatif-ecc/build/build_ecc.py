@@ -49,7 +49,7 @@ slide('arastirma', 2, f'''{K('Neden?')}{H2('Araştırmalar ne diyor?')}
 <div class="row reveal" style="margin-top:var(--content-gap)">
   <div class="card"><h3>Söz isteyen hep aynı grup</h3><p class="cite">Aguillon ve ark., 2020</p></div>
   <div class="card"><h3>Kaygı başarıyı düşürür</h3><p class="cite">Botes ve ark., 2020</p></div>
-  <div class="focal card" style="background:var(--accent)"><h3>Söz vermek gönüllüleri artırır</h3><p class="big" style="font-size:calc(var(--h3-size) * 1.3);white-space:nowrap">%55 → %77</p><p class="cite" style="color:var(--accent-ink)">Dallimore ve ark., 2013</p></div>
+  <div class="focal card" style="background:var(--accent)"><h3>Söz vermek gönüllüleri artırır</h3><p class="big" style="font-size:min(calc(var(--h3-size) * 1.3), 14cqi);white-space:nowrap">%55 → %77</p><p class="cite" style="color:var(--accent-ink)">Dallimore ve ark., 2013</p></div>
 </div>'''),
 slide('ingilizce', 0, f'''{K('Dil dersinde')}<h2 class="reveal">Söz hakkı, konuşma pratiği demek.</h2>{L('Parmak kaldırmayan, pratiği de kaçırır.')}''', 'statement'),
 slide('kural', 3, f'''{K('Uygulamanın tek kuralı')}<h2 class="reveal" style="font-size:var(--title-size);max-width:17ch">Herkes söz almadan, kimse <span style="color:var(--accent)">ikinci kez</span> seçilmez.</h2>{L('Sıra rastgele, söz hakkı eşit.')}'''),
