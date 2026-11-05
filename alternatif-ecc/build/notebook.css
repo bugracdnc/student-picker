@@ -1,0 +1,50 @@
+/* fonts: https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap */
+/* ===== Notebook Tabs: cream paper sheet on charcoal, pastel side tabs ===== */
+:root {
+  --bg: #2b2b2e; --paper: #f7f1e3; --bg-2: #ece4d0; --ink: #23231f; --ink-2: #5f5a4f;
+  --accent: #c0532f; --accent-ink: #23231f; --muted-bar: #b9b09a;
+  --tab-1: #f4b8a8; --tab-2: #bcd9c4; --tab-3: #c5c9ec; --tab-4: #f3dc8f;
+  --font-display: "Archivo Black", "Arial Black", sans-serif; --font-body: "Space Grotesk", "Segoe UI", sans-serif;   /* same pair as Bold Signal */
+}
+body, .slide { background: var(--bg); }
+/* One continuous fanfold sheet (dot-matrix style): the paper lives on <main>, so it never breaks between slides */
+html { scroll-snap-type: none; }   /* settling is done in JS: glide to the page that fills most of the screen */
+:root { --strip: clamp(1.6rem, 2.8vw, 3rem); --hole: #2b2b2e; --perf: #cfc4a9; }
+.slide { background: transparent; width: 100%; }
+main {
+  display: block; position: relative;
+  width: calc(100vw - 2 * clamp(0.5rem, 2vw, 2rem)); margin: 0 auto;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle, var(--hole) 0 calc(var(--strip) * .2), transparent calc(var(--strip) * .22)),
+    radial-gradient(circle, var(--hole) 0 calc(var(--strip) * .2), transparent calc(var(--strip) * .22)),
+    repeating-linear-gradient(to bottom, var(--perf) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(to bottom, var(--perf) 0 6px, transparent 6px 12px);
+  background-size: var(--strip) var(--strip), var(--strip) var(--strip), 1px 12px, 1px 12px;
+  background-position: 0 0, right 0 top 0, var(--strip) 0, right var(--strip) top 0;
+  background-repeat: repeat-y;
+  box-shadow: 0 0 60px rgba(0,0,0,.5);
+}
+/* tear line where one printed page meets the next: pages stay attached */
+.slide + .slide::before { content: ""; position: absolute; top: 0; left: var(--strip); right: var(--strip); border-top: 2px dashed var(--perf); }
+.slide-content { padding-left: calc(var(--strip) + var(--slide-padding)); padding-right: calc(var(--strip) + var(--slide-padding)); }
+@media (max-width: 760px) { main { width: calc(100vw - 2.2rem); margin-left: 0; } }
+h1, h2 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; color: var(--ink); }
+.kicker { color: var(--accent); }
+.num { display: none; }
+.card { background: var(--bg-2); border-radius: 4px; border-left: 8px solid var(--tab-2); }
+.row > .card:nth-child(1) { border-left-color: var(--tab-1); }
+.row > .card:nth-child(3) { border-left-color: var(--tab-3); }
+.focal, .focal.card[style] { background: var(--tab-4) !important; border-left-color: var(--accent); }
+.card .cite { color: var(--accent); }
+.focal .cite { color: var(--ink) !important; }
+.lead b { color: var(--ink); }
+.seg.zero { background: var(--ink); color: var(--paper); }
+.seg.one { background: var(--muted-bar); color: var(--ink); }
+.me .seg { background: var(--accent); }
+.big { font-family: var(--font-display); }
+.hint, .counter { color: #9a968c; }
+.card .cite { font-size: calc(var(--label-size) * .9); }
+
+/* pre-printed paper: content just rides along with the page, no fade/slide/grow-in */
+.reveal, .slide.visible .reveal, .grow, .slide.visible .grow { opacity: 1; transform: none; transition: none; }

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herkese Eşit Söz</title>
+<!-- Bold Signal preset (ECC frontend-slides): Archivo Black + Space Grotesk -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* ===========================================
+   THEME: change these to restyle the whole deck
+   Sizes scale with both width and height so text stays
+   readable from the back of a classroom (~10 m) on a 1080p board.
+   =========================================== */
+:root {
+  --bg: #161616;
+  --bg-2: #222222;
+  --ink: #f5f2ec;
+  --ink-2: #a9a59e;
+  --accent: #ff6a2b;        /* hot orange focal colour */
+  --accent-ink: #161616;    /* text on orange */
+  --muted-bar: #5b5852;
+
+  --font-display: "Archivo Black", "Arial Black", sans-serif;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif;
+
+  --title-size: clamp(2.2rem, min(6.6vw, 12vh), 8rem);
+  --h2-size:    clamp(1.8rem, min(4.8vw, 8.6vh), 6rem);
+  --h3-size:    clamp(1.2rem, min(2.8vw, 5vh), 3.4rem);
+  --body-size:  clamp(1.05rem, min(2.5vw, 4.5vh), 3.1rem);
+  --label-size: clamp(0.95rem, min(1.9vw, 3.4vh), 2.4rem);
+  --kicker-size:clamp(0.85rem, min(1.6vw, 2.9vh), 2rem);
+  --num-size:   clamp(5rem, min(20vw, 34vh), 26rem);
+
+  --slide-padding: clamp(1rem, 5vw, 7rem);
+  --content-gap: clamp(0.75rem, 2.4vh, 2.5rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 0.7s;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===== VIEWPORT FITTING: MANDATORY BASE (ECC) ===== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+.slide {
+  width: 100vw; height: 100vh; height: 100dvh; overflow: hidden;
+  scroll-snap-align: start; display: flex; flex-direction: column; position: relative;
+  background: var(--bg);
+}
+.slide-content {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  gap: var(--content-gap); max-height: 100%; overflow: hidden;
+  padding: var(--slide-padding); position: relative; z-index: 1;
+}
+img { max-width: 100%; object-fit: contain; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ===== TYPE ===== */
+.kicker { font-size: var(--kicker-size); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+h1, h2 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; letter-spacing: -0.01em; }
+h1 { font-size: var(--title-size); }
+h2 { font-size: var(--h2-size); max-width: 18ch; }
+h3 { font-family: var(--font-body); font-weight: 700; font-size: var(--h3-size); line-height: 1.12; }
+.lead { font-size: var(--body-size); line-height: 1.3; color: var(--ink-2); max-width: 30ch; }
+.lead b, .lead strong { color: var(--ink); }
+.small { font-size: clamp(0.7rem, 1.1vw, 1.3rem); color: var(--ink-2); line-height: 1.45; }
+
+/* Oversized section number: Bold Signal signature */
+.num {
+  position: absolute; right: calc(-1 * clamp(0.5rem, 1vw, 1.5rem)); bottom: calc(-1 * clamp(1rem, 4vh, 4rem));
+  font-family: var(--font-display); font-size: var(--num-size); line-height: 1;
+  color: transparent; -webkit-text-stroke: 2px #3a3835; z-index: 0; user-select: none;
+}
+
+/* ===== BUILDING BLOCKS ===== */
+.focal { background: var(--accent); color: var(--accent-ink); border-radius: clamp(8px, 1vw, 18px); padding: clamp(1rem, 3vh, 3rem) clamp(1.2rem, 2.4vw, 3rem); }
+.focal .lead, .focal .small { color: var(--accent-ink); }
+.card { background: var(--bg-2); border-radius: clamp(8px, 1vw, 18px); padding: clamp(1rem, 3vh, 2.6rem) clamp(1rem, 2vw, 2.6rem); display: flex; flex-direction: column; gap: clamp(0.4rem, 1.4vh, 1.2rem); }
+.card .cite { font-size: var(--label-size); color: var(--accent); font-weight: 700; margin-top: auto; }
+.row { display: flex; gap: clamp(0.75rem, 2vw, 2.5rem); }
+.row > * { flex: 1; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.6rem, 1.6vw, 2rem); }
+.step-n { font-family: var(--font-display); font-size: var(--h2-size); color: var(--accent); line-height: 1; }
+.split { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(1rem, 4vw, 5rem); align-items: center; height: 100%; }
+.shot { width: 100%; max-height: 78vh; border-radius: clamp(8px, 1vw, 16px); box-shadow: 0 0 0 3px var(--accent), 0 20px 60px rgba(0,0,0,.5); background: #fff; }
+.statement { background: var(--accent); }
+.statement h2, .statement .kicker, .statement .lead { color: var(--accent-ink); }
+.statement h2 { max-width: 16ch; font-size: var(--title-size); }
+
+/* Classroom dots (slide 2): 30 students, a few raising hands */
+.dots { display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(0.6rem, 2.2vh, 2rem); width: min(42vw, 62vh); }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: #3a3835; display: block; }
+.dots i.up { background: var(--accent); transform: translateY(-30%); box-shadow: 0 0 0 4px rgba(255,106,43,.25); }
+
+/* Bar charts (slide 15) */
+.chart { display: flex; flex-direction: column; gap: clamp(0.4rem, 1.6vh, 1.3rem); }
+.bar-row { display: grid; grid-template-columns: 9.5em 1fr 2.2em; align-items: center; gap: 0.6em; font-size: var(--label-size); }
+.bar-row .lbl { color: var(--ink-2); }
+.bar-row.me .lbl { color: var(--ink); font-weight: 700; }
+.track { height: 1.35em; display: flex; }
+.seg { height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bg); font-size: 0.8em; }
+.seg.zero { background: var(--ink-2); }
+.seg.one { background: var(--muted-bar); color: var(--ink); }
+.seg.solid { background: var(--muted-bar); }
+.me .seg { background: var(--accent); }
+.val { font-family: var(--font-display); }
+.me .val { color: var(--accent); }
+.legend { display: flex; gap: 1.2em; font-size: var(--label-size); color: var(--ink-2); }
+.legend span::before { content: ""; display: inline-block; width: 0.8em; height: 0.8em; margin-right: 0.35em; vertical-align: -0.05em; background: var(--c); border-radius: 3px; }
+
+/* Big numbers (slide 16) */
+.big { font-family: var(--font-display); font-size: clamp(4rem, min(15vw, 26vh), 18rem); line-height: 0.95; }
+.big small { font-size: 0.4em; color: var(--ink-2); }
+
+/* ===== REVEAL ANIMATIONS ===== */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity var(--duration) var(--ease-out-expo), transform var(--duration) var(--ease-out-expo); }
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal:nth-child(2) { transition-delay: .08s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: .16s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: .24s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: .32s; }
+.grow { transform-origin: left; transform: scaleX(0); transition: transform 1s var(--ease-out-expo) .3s; }
+.slide.visible .grow { transform: scaleX(1); }
+
+/* ===== CHROME: progress, counter, notes ===== */
+.progress { position: fixed; top: 0; left: 0; height: 5px; background: var(--accent); width: 0; z-index: 20; transition: width .3s; }
+.counter { position: fixed; right: 1.2rem; bottom: 0.9rem; font-size: 0.95rem; color: var(--ink-2); z-index: 20; font-variant-numeric: tabular-nums; }
+aside.notes { display: none; }
+.notes-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; max-height: 40vh; overflow: auto; z-index: 30;
+  background: rgba(10,10,10,.96); border-top: 3px solid var(--accent); padding: 1.2rem 1.6rem;
+  font-size: 1.15rem; line-height: 1.55; color: var(--ink); display: none;
+}
+.notes-panel.open { display: block; }
+.hint { position: fixed; left: 1.2rem; bottom: 0.9rem; font-size: 0.85rem; color: #6d6a64; z-index: 20; }
+
+@media (max-width: 760px) {
+  .row, .grid2, .split { grid-template-columns: 1fr; flex-direction: column; }
+  .split { height: auto; }
+  .num { display: none; }
+  .card { flex-direction: row; align-items: center; }
+  .card .step-n { font-size: var(--h3-size); }
+  .shot { max-height: 42vh; }
+}
+@media (max-height: 600px) { .hint, .num { display: none; } }
+/* Landscape phones: keep columns side by side, there is no height to stack them */
+@media (max-height: 500px) {
+  :root { --slide-padding: clamp(0.6rem, 3vw, 1.5rem); --content-gap: 0.5rem; }
+  .row { flex-direction: row; }
+  .grid2 { grid-template-columns: 1fr 1fr; }
+  .split { grid-template-columns: 1.2fr 1fr; height: 100%; }
+  .card { padding: 0.5rem 0.7rem; }
+  .shot { max-height: 70vh; }
+  .chart { gap: 0.25rem; }
+  .bar-row { font-size: 0.75rem; }
+  .small { font-size: 0.55rem; }
+  .grid2 { gap: 0.4rem; }
+}
+@media (max-height: 400px) { .lead { font-size: 0.85rem; } h2 { font-size: 1.5rem; } .card .cite { font-size: 0.75rem; } }
+/* fonts: https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap */
+/* ===== Notebook Tabs: cream paper sheet on charcoal, pastel side tabs ===== */
+:root {
+  --bg: #2b2b2e; --paper: #f7f1e3; --bg-2: #ece4d0; --ink: #23231f; --ink-2: #5f5a4f;
+  --accent: #c0532f; --accent-ink: #23231f; --muted-bar: #b9b09a;
+  --tab-1: #f4b8a8; --tab-2: #bcd9c4; --tab-3: #c5c9ec; --tab-4: #f3dc8f;
+  --font-display: "Archivo Black", "Arial Black", sans-serif; --font-body: "Space Grotesk", "Segoe UI", sans-serif;   /* same pair as Bold Signal */
+}
+body, .slide { background: var(--bg); }
+/* One continuous fanfold sheet (dot-matrix style): the paper lives on <main>, so it never breaks between slides */
+html { scroll-snap-type: none; }   /* settling is done in JS: glide to the page that fills most of the screen */
+:root { --strip: clamp(1.6rem, 2.8vw, 3rem); --hole: #2b2b2e; --perf: #cfc4a9; }
+.slide { background: transparent; width: 100%; }
+main {
+  display: block; position: relative;
+  width: calc(100vw - 2 * clamp(0.5rem, 2vw, 2rem)); margin: 0 auto;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle, var(--hole) 0 calc(var(--strip) * .2), transparent calc(var(--strip) * .22)),
+    radial-gradient(circle, var(--hole) 0 calc(var(--strip) * .2), transparent calc(var(--strip) * .22)),
+    repeating-linear-gradient(to bottom, var(--perf) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(to bottom, var(--perf) 0 6px, transparent 6px 12px);
+  background-size: var(--strip) var(--strip), var(--strip) var(--strip), 1px 12px, 1px 12px;
+  background-position: 0 0, right 0 top 0, var(--strip) 0, right var(--strip) top 0;
+  background-repeat: repeat-y;
+  box-shadow: 0 0 60px rgba(0,0,0,.5);
+}
+/* tear line where one printed page meets the next: pages stay attached */
+.slide + .slide::before { content: ""; position: absolute; top: 0; left: var(--strip); right: var(--strip); border-top: 2px dashed var(--perf); }
+.slide-content { padding-left: calc(var(--strip) + var(--slide-padding)); padding-right: calc(var(--strip) + var(--slide-padding)); }
+@media (max-width: 760px) { main { width: calc(100vw - 2.2rem); margin-left: 0; } }
+h1, h2 { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; color: var(--ink); }
+.kicker { color: var(--accent); }
+.num { display: none; }
+.card { background: var(--bg-2); border-radius: 4px; border-left: 8px solid var(--tab-2); }
+.row > .card:nth-child(1) { border-left-color: var(--tab-1); }
+.row > .card:nth-child(3) { border-left-color: var(--tab-3); }
+.focal, .focal.card[style] { background: var(--tab-4) !important; border-left-color: var(--accent); }
+.card .cite { color: var(--accent); }
+.focal .cite { color: var(--ink) !important; }
+.lead b { color: var(--ink); }
+.seg.zero { background: var(--ink); color: var(--paper); }
+.seg.one { background: var(--muted-bar); color: var(--ink); }
+.me .seg { background: var(--accent); }
+.big { font-family: var(--font-display); }
+.hint, .counter { color: #9a968c; }
+.card .cite { font-size: calc(var(--label-size) * .9); }
+
+/* pre-printed paper: content just rides along with the page, no fade/slide/grow-in */
+.reveal, .slide.visible .reveal, .grow, .slide.visible .grow { opacity: 1; transform: none; transition: none; }
+
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<main>
+<section class="slide " id="kapak">
+  <div class="slide-content">
+<p class="kicker reveal">Öğrenci Seçici</p>
+<h1 class="reveal">Herkese<br>eşit söz</h1>
+<p class="lead reveal">Sınıfta söz hakkını adil dağıtan seçici</p>
+<p class="small reveal" style="font-size:var(--label-size)"><b style="color:var(--ink)">Buğra Çalışkandinç</b> · Milli Eğitim Akademisi Aday Öğretmeni</p>
+  </div>
+  <aside class="notes">(~30 sn) Merhaba. Bugün size sınıfta söz hakkını herkese eşit dağıtmak için geliştirdiğim küçük bir uygulamayı, Öğrenci Seçici’yi anlatacağım. Üç soruya cevap vereceğim: Neden yaptım, nasıl çalışıyor, ve gerçekten fark yaratıyor mu?</aside>
+</section>
+<section class="slide " id="sahne">
+  <div class="num" aria-hidden="true">01</div><div class="slide-content">
+<div class="row" style="align-items:center">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Neden?</p><h2 class="reveal">Tanıdık bir sahne</h2><p class="lead reveal">Hep aynı eller kalkıyor.</p></div>
+  <div style="display:flex;justify-content:center"><div class="dots reveal" aria-label="30 öğrenci; ön sıralardan 4 kişi parmak kaldırıyor"><i></i><i class="up"></i><i></i><i class="up"></i><i></i><i></i><i></i><i></i><i class="up"></i><i></i><i class="up"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+  </div>
+  <aside class="notes">(~45 sn) Hepimizin bildiği bir sahne: Soruyu soruyoruz, aynı üç beş el kalkıyor. Ders akıcı gidiyor gibi görünüyor ama sınıfın büyük bölümü aslında hiç konuşmuyor. Parmak kaldırmayanı seçmeye karar verdiğimizde bile, kendi “rastgele” seçimimiz pek de rastgele değil: göz hizamızdaki, adını hemen hatırladığımız, ön sıralardaki öğrencilere yöneliyoruz.</aside>
+</section>
+<section class="slide " id="arastirma">
+  <div class="num" aria-hidden="true">02</div><div class="slide-content">
+<p class="kicker reveal">Neden?</p><h2 class="reveal">Araştırmalar ne diyor?</h2>
+<div class="row reveal" style="margin-top:var(--content-gap)">
+  <div class="card"><h3>Söz isteyen hep aynı grup</h3><p class="cite">Aguillon ve ark., 2020</p></div>
+  <div class="card"><h3>Kaygı başarıyı düşürür</h3><p class="cite">Botes ve ark., 2020</p></div>
+  <div class="focal card" style="background:var(--accent)"><h3>Söz vermek gönüllüleri artırır</h3><p class="big" style="font-size:calc(var(--h3-size) * 1.3);white-space:nowrap">%55 → %77</p><p class="cite" style="color:var(--accent-ink)">Dallimore ve ark., 2013</p></div>
+</div>
+  </div>
+  <aside class="notes">(~60 sn) Bu sadece bizim izlenimimiz değil, üç çalışma problemi farklı yönlerden gösteriyor. Birincisi, Aguillon ve arkadaşları (2020): Bir biyoloji dersinde iki dönem boyunca kimin söz aldığını gözlemlediler. Aktif öğrenme kullanılan bir sınıfta bile gönüllü yanıtlar belli bir grupta toplandı; söz isteyene söz verildiğinde ses eşit dağılmıyor. İkincisi, İngilizce öğretmenleri için: Botes, Dewaele ve Greiff (2020), Horwitz’in 1986’da geliştirdiği yabancı dil kaygısı ölçeğini kullanan çalışmaları bir araya getirdi. Kaygı ile başarı arasında orta düzeyde negatif bir ilişki var. Yani çekingen öğrenci kendiliğinden parmak kaldırmıyor ve bunun bedeli başarıya yansıyor. Üçüncüsü umut verici: Dallimore ve arkadaşları (2013), 632 öğrencilik bir derste, öğrencilere sıkça söz verilen şubelerde gönüllü yanıt verenlerin %77’ye çıktığını, az söz verilenlerde %55’te kaldığını buldu; öğrencilerin rahatlığı da arttı. Not: bu çalışma üniversite muhasebe derslerinde yapıldı; bizim sınıflarımıza birebir taşımadan, yön gösterici olarak alıyorum.</aside>
+</section>
+<section class="slide statement" id="ingilizce">
+  <div class="slide-content">
+<p class="kicker reveal">Dil dersinde</p><h2 class="reveal">Söz hakkı, konuşma pratiği demek.</h2><p class="lead reveal">Parmak kaldırmayan, pratiği de kaçırır.</p>
+  </div>
+  <aside class="notes">(~30 sn) İngilizce dersinde bu daha da önemli. Dil konuşarak öğrenilir. Söz hakkı birkaç kişide toplandığında, o birkaç kişi pratik yapıyor; geri kalanı dinliyor. Ve parmak kaldırmayan öğrenci genellikle tam da en çok pratiğe ihtiyacı olan öğrenci.</aside>
+</section>
+<section class="slide " id="kural">
+  <div class="num" aria-hidden="true">03</div><div class="slide-content">
+<p class="kicker reveal">Uygulamanın tek kuralı</p><h2 class="reveal" style="font-size:var(--title-size);max-width:17ch">Herkes söz almadan, kimse <span style="color:var(--accent)">ikinci kez</span> seçilmez.</h2><p class="lead reveal">Sıra rastgele, söz hakkı eşit.</p>
+  </div>
+  <aside class="notes">(~30 sn) Öğrenci Seçici bu soruna tek bir kuralla cevap veriyor: Derste olan herkes bir kez söz almadan, kimse ikinci kez seçilmiyor. Sıra tamamen rastgele, ama sonuç eşit. Kimin konuşacağını benim bakışım ya da en hızlı kalkan el değil, uygulama belirliyor. Bu öğretmeni de rahatlatıyor: “Hocam hep beni seçiyorsunuz” itirazının cevabı ekranda.</aside>
+</section>
+<section class="slide " id="isleyis">
+  <div class="num" aria-hidden="true">04</div><div class="slide-content">
+<p class="kicker reveal">Nasıl çalışır?</p><h2 class="reveal">Bir tur, beş adım</h2>
+<div class="row reveal" style="margin-top:var(--content-gap)"><div class="card"><span class="step-n">1</span><h3>Sınıf listesi</h3></div><div class="card"><span class="step-n">2</span><h3>Yoklama</h3></div><div class="card"><span class="step-n">3</span><h3>Seçim havuzu</h3></div><div class="card"><span class="step-n">4</span><h3>Rastgele seçim</h3></div><div class="card"><span class="step-n">5</span><h3>Yeni tur</h3></div></div>
+  </div>
+  <aside class="notes">(~60 sn) Kullanımı beş adım. Sınıf listesini e-Okul’dan ya da bir tablodan kopyalayıp yapıştırıyorsunuz. Derse başlarken yoklamayı işaretliyorsunuz: Var, Yok ya da Atla. “Atla”, sınıfta olan ama o gün seçilmemesi gereken öğrenci için; örneğin revirde ya da sunum yapıyor. Havuzda yalnızca derste olan ve bu turda henüz söz almamış öğrenciler var. Büyük düğmeye dokunuyorsunuz, isimler kısa bir süre dönüyor ve biri seçiliyor; seçilen havuzdan çıkıyor. Doğru cevaba +1 verebiliyorsunuz. Herkes söz aldığında yeni tur başlıyor. Yanlışlıkla bastıysanız ekranın altındaki “Geri al” düğmesi son işlemi geri alır.</aside>
+</section>
+<section class="slide " id="ekran-secim">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z1-ana.png" alt="Seçim ekranı: Öğrenci seç düğmesi, sayaçlar ve ilerleme çubuğu">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">Seçim ekranı</h2><p class="lead reveal">Tek büyük düğme: dokunun ya da Boşluk’a basın.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~20 sn) Tahtada gördüğünüz ekran bu. Ortada tek büyük düğme var; parmakla dokunmak ya da klavyede Boşluk tuşuna basmak yeterli. Altta kaç öğrencinin mevcut olduğu, kaçının sırada beklediği ve bu turda kaçının söz aldığı görünüyor; çubuk turun ne kadarının bittiğini gösteriyor. [Mümkünse burada uygulamayı canlı gösterin.]</aside>
+</section>
+<section class="slide " id="ekran-koyu">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z5-ana-koyu.png" alt="Seçim ekranı koyu temada">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">Koyu tema da var</h2><p class="lead reveal">Karartılmış sınıfta göz yormaz.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~10 sn) Aynı ekran koyu temada. Sağ üstteki ay/güneş düğmesiyle tek dokunuşla geçiliyor; ışığı parlak sınıflarda açık tema, karartılmış sınıflarda ve projeksiyonda koyu tema daha rahat okunur.</aside>
+</section>
+<section class="slide " id="ekran-ingilizce">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z6-ana-en.png" alt="Seçim ekranı İngilizce arayüzle">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">“It also comes in English!”</h2><p class="lead reveal">Arayüz her derste ek bir İngilizce girdi olur.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~15 sn) Uygulama İngilizce de kullanılabiliyor; sağ üstteki EN / TR düğmesiyle tek dokunuşla geçiliyor. İngilizce derslerinde arayüzü İngilizceye almanızı öneririm: “Who's next?”, “Pick a student”, “New round” gibi ifadeler her derste tahtada görünür ve öğrenciler bunları kısa sürede kendileri kullanmaya başlar. Küçük ama her gün tekrar eden, anlamlı bir hedef dil girdisi.</aside>
+</section>
+<section class="slide " id="ekran-isim">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z2-isim.png" alt="Seçilen öğrencinin adı büyük, altında −1 ve +1 düğmeleri">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">Söz sende</h2><p class="lead reveal">İsim arka sıradan da okunur.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~15 sn) Seçilen öğrencinin adı arka sıradan da okunacak büyüklükte çıkıyor. Altındaki düğmelerle cevaba hemen +1 ya da −1 puan verebilirsiniz; puan vermek zorunlu değil.</aside>
+</section>
+<section class="slide " id="ekran-liste">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z3-kartlar.png" alt="Öğrenci kartları: Var / Yok / Pas düğmeleri ve Seçildi rozeti">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">Yoklama ve tur</h2><p class="lead reveal">Yok ya da Pas olan öğrenci seçilmez.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~20 sn) Öğrenci listesinde her kartta yoklama düğmeleri var: Var, Yok ve Pas. Yok ya da Pas işaretli öğrenci seçilmez; Pas, o gün konuşmak istemeyen öğrenci için. “Seçildi” rozeti bu turda kimin söz aldığını gösteriyor; tur bitene kadar o öğrenci tekrar seçilmez.</aside>
+</section>
+<section class="slide " id="ekran-tablo">
+  <div class="num" aria-hidden="true">05</div><div class="slide-content">
+<div class="split">
+  <img class="shot reveal" src="../screenshots/z4-tablo.png" alt="Tur tamamlandı ekranı ve puan tablosu">
+  <div style="display:flex;flex-direction:column;gap:var(--content-gap)"><p class="kicker reveal">Uygulamadan</p><h2 class="reveal">Tur bitti</h2><p class="lead reveal">Yeni tur tek dokunuşla başlar.</p></div>
+</div>
+  </div>
+  <aside class="notes">(~20 sn) Mevcut öğrencilerin hepsi söz alınca tur tamamlanıyor ve “Yeni tura başla” düğmesi çıkıyor. Puan tablosu hem puanları hem de her öğrencinin toplam kaç kez söz aldığını tutuyor; isterseniz CSV olarak Excel’e aktarabilirsiniz. Birden fazla sınıf tutabilir, sınıfları kopyalayabilir, yedek alıp başka tahtaya taşıyabilirsiniz.</aside>
+</section>
+<section class="slide " id="yapim">
+  <div class="num" aria-hidden="true">06</div><div class="slide-content">
+<p class="kicker reveal">Nasıl yapıldı?</p><h2 class="reveal">Sınıfın ihtiyacından doğdu</h2><p class="lead reveal">Eylül 2025’ten beri kendi derslerimde gelişiyor.</p>
+<div class="grid2 reveal" style="margin-top:var(--content-gap)"><div class="card"><h3>İnternetsiz</h3></div><div class="card"><h3>Veri tahtada kalır</h3></div><div class="card"><h3>Pardus’a hazır</h3></div><div class="card"><h3>Türkçe / İngilizce</h3></div></div>
+  </div>
+  <aside class="notes">(~60 sn) Uygulama kendi derslerimdeki ihtiyaçtan doğdu. [Burada kısa kişisel hikâyenizi anlatın: hangi sınıfta, hangi an “bunu yapmalıyım” dediniz.] Eylül 2025’te basit bir ilk sürümle başladım; Ocak 2026’da akıllı tahtanın dokunmatik ekranına göre düzeni değiştirdim; Ekim 2026’da yeni tasarım, iki dil desteği ve Pardus paketiyle ilk deneme sürümünü yayımladım. Teknik olarak TypeScript ile yazılmış, tek bir HTML dosyası olarak çalışan bir web uygulaması. Okul tahtalarında internet ve yönetici şifresi her zaman olmadığı için internetsiz çalışması ve şifresiz kurulabilmesi baştan önceliğimdi. Öğrenci adları hiçbir sunucuya gitmiyor, sadece o tahtada kalıyor. Arayüz Türkçe ve İngilizce; tek dokunuşla değişiyor.</aside>
+</section>
+<section class="slide " id="sim-kurulum">
+  <div class="num" aria-hidden="true">07</div><div class="slide-content">
+<p class="kicker reveal">Ne kadar fark eder?</p><h2 class="reveal">30 öğrenci, 15 ders, 90 söz hakkı</h2><p class="lead reveal">Adil dağılımda herkes <b>3 kez</b> söz alır.</p>
+<div class="row reveal" style="margin-top:var(--content-gap)">
+  <div class="card"><h3>Parmak kaldırma</h3></div><div class="card"><h3>Öğretmenin seçimi</h3></div><div class="card"><h3>İsim çarkı</h3></div><div class="focal card"><h3>Öğrenci Seçici</h3></div>
+</div>
+  </div>
+  <aside class="notes">(~45 sn) Peki gerçekten fark ediyor mu? Bunu görmek için basit bir bilgisayar simülasyonu yaptım. 30 kişilik bir sınıf, bir ayda 15 ders, her derste 6 soru: toplam 90 söz hakkı. Adil olsaydı herkes 3 kez konuşurdu. Dört yöntemi karşılaştırdım. Parmak kaldırmada 5 baskın, 10 orta, 15 çekingen öğrenci var. Öğretmenin kendi seçiminde ön sıralar daha sık aklımıza geliyor, ama yakın zamanda seçtiğimiz kişiyi tekrar seçmemeye çalışıyoruz. Üçüncüsü internetteki klasik isim çarkları: gerçekten rastgele ama hafızasız. Dördüncüsü Öğrenci Seçici. Oranlar benim varsayımlarım; amaç kesin rakam değil, eğilimi görmek. Sonuçlar her yöntem için 5.000 denemenin ortalaması.</aside>
+</section>
+<section class="slide " id="sim-sonuc">
+  <div class="num" aria-hidden="true">07</div><div class="slide-content">
+<p class="kicker reveal">Sonuçlar</p><h2 class="reveal">Bir ayda söz hakkı nasıl dağıldı?</h2><p class="lead reveal">Kısa çubuk daha adil.</p>
+<div class="row reveal" style="margin-top:var(--content-gap);gap:clamp(1rem,4vw,5rem)">
+  <div class="chart"><h3>Ayda en fazla 1 kez konuşan</h3><div class="legend"><span style="--c:var(--ink-2)">hiç</span><span style="--c:var(--muted-bar)">1 kez</span></div><div class="bar-row"><span class="lbl">Parmak kaldırma</span><div class="track grow"><div class="seg zero" style="width:56.9%">8</div><div class="seg one" style="width:42.7%">6</div></div><span class="val">14</span></div><div class="bar-row"><span class="lbl">Öğretmenin seçimi</span><div class="track grow"><div class="seg zero" style="width:14.2%">2</div><div class="seg one" style="width:35.6%">5</div></div><span class="val">7</span></div><div class="bar-row"><span class="lbl">İsim çarkı</span><div class="track grow"><div class="seg zero" style="width:7.1%">1</div><div class="seg one" style="width:35.6%">5</div></div><span class="val">6</span></div><div class="bar-row me"><span class="lbl">Öğrenci Seçici</span><div class="track grow"><div class="seg solid" style="width:1.0%"></div></div><span class="val">0</span></div></div>
+  <div class="chart"><h3>En çok seçilen öğrenci kaç kez? <span style="color:var(--ink-2)">(adil: 3)</span></h3><div class="bar-row"><span class="lbl">Parmak kaldırma</span><div class="track grow"><div class="seg solid" style="width:103.0%"></div></div><span class="val">13</span></div><div class="bar-row"><span class="lbl">Öğretmenin seçimi</span><div class="track grow"><div class="seg solid" style="width:55.5%"></div></div><span class="val">7</span></div><div class="bar-row"><span class="lbl">İsim çarkı</span><div class="track grow"><div class="seg solid" style="width:55.5%"></div></div><span class="val">7</span></div><div class="bar-row me"><span class="lbl">Öğrenci Seçici</span><div class="track grow"><div class="seg solid" style="width:23.8%"></div></div><span class="val">3</span></div></div>
+</div>
+  </div>
+  <aside class="notes">(~75 sn) İki grafikte de kısa çubuk daha adil. Soldaki grafik: bir ayda 1 kez ya da hiç konuşamayan öğrenciler. Koyu kısım hiç konuşmayanlar, açık kısım yalnızca 1 kez konuşanlar. Parmak kaldırmada 30 öğrencinin 14’ü geride kalıyor; 8’i bir ay boyunca hiç konuşmuyor. Kendi seçimimizde bu 7 kişiye düşüyor, ama sıfır değil. Rastgele isim çarkı bile 6 öğrenciyi geride bırakıyor. Öğrenci Seçici’de sıfır; herkes tam 3 kez konuşuyor. Sağdaki grafik: en çok seçilen öğrenci bir ayda kaç kez konuştu? Adil olsa 3. Parmak kaldırmada aynı öğrenci yaklaşık 13 kez konuşuyor; kendi seçimimizde ve çarkta 7. Öğrenci Seçici’de 3. Gruplara bakınca: parmak kaldırmada baskın 5 öğrenci ayda ortalama 9 kez, çekingen 15 öğrenci 1 kezden az konuştu. Öğretmenin seçiminde ön sıralar 4,6 kez, arka sıralar 1,8 kez söz aldı. Rakamlar 5.000 denemenin ortalaması, tam sayıya yuvarlandı.</aside>
+</section>
+<section class="slide " id="buyuk-sayi">
+  <div class="slide-content">
+<h2 class="reveal">Rastgele olmak, adil olmak demek değil</h2>
+<div class="row reveal" style="margin-top:var(--content-gap)">
+  <div><p class="big">11<small>/30</small></p><p class="lead">İsim çarkıyla 30 soruda hiç seçilmeyen</p></div>
+  <div><p class="big" style="color:var(--accent)">0<small>/30</small></p><p class="lead">Öğrenci Seçici ile hiç seçilmeyen</p></div>
+</div>
+  </div>
+  <aside class="notes">(~30 sn) Bir şeyi özellikle vurgulamak istiyorum: “Rastgele” olmak tek başına yetmiyor. İnternetteki isim çarklarıyla 30 kişilik sınıfa 30 soru sorduğunuzda, matematiksel olarak ortalama 11 öğrenci hiç seçilmiyor; bazıları ise iki üç kez çıkıyor. Öğrenci Seçici’de 30 soruda 30 farklı öğrenci konuşuyor.</aside>
+</section>
+<section class="slide " id="ipuclari">
+  <div class="num" aria-hidden="true">08</div><div class="slide-content">
+<p class="kicker reveal">Sınıfta kullanım</p><h2 class="reveal">Kaygıyı artırmadan söz vermek</h2>
+<div class="grid2 reveal" style="margin-top:var(--content-gap)"><div class="card" style="flex-direction:row;align-items:center"><span class="step-n" style="font-size:var(--h3-size);min-width:1.4em">01</span><h3>Önce soru, sonra isim</h3></div><div class="card" style="flex-direction:row;align-items:center"><span class="step-n" style="font-size:var(--h3-size);min-width:1.4em">02</span><h3>Düşünme süresi</h3></div><div class="card" style="flex-direction:row;align-items:center"><span class="step-n" style="font-size:var(--h3-size);min-width:1.4em">03</span><h3>Önce ikili prova</h3></div><div class="card" style="flex-direction:row;align-items:center"><span class="step-n" style="font-size:var(--h3-size);min-width:1.4em">04</span><h3>Çabayı ödüllendirin</h3></div></div>
+  </div>
+  <aside class="notes">(~60 sn) Rastgele söz vermek, özellikle dil dersinde, yanlış kullanılırsa kaygıyı artırabilir. Bunu önlemek için dört öneri: Birincisi, önce soruyu sorun, sonra seçin; böylece herkes cevabı düşünür. İkincisi, düşünme süresi verin. Üçüncüsü, seçimden önce öğrencilerin cevabı sıra arkadaşıyla prova etmesine izin verin; seçilen öğrenci yalnız değil, hazırlanmış oluyor. Dördüncüsü, artı puanı çabaya da verin; takılan öğrenciye ipucu verip geri dönün. Amaç öğrenciyi yakalamak değil, herkese söz hakkı tanımak.</aside>
+</section>
+<section class="slide " id="kurulum">
+  <div class="num" aria-hidden="true">09</div><div class="slide-content">
+<p class="kicker reveal">Her branş, her akıllı tahta</p><h2 class="reveal">Pardus’ta üç kurulum yolu</h2>
+<div class="row reveal" style="margin-top:var(--content-gap)">
+  <div class="card"><span class="step-n">1</span><h3>Paketle</h3><p class="lead" style="font-size:var(--label-size)">.deb dosyası</p></div>
+  <div class="card"><span class="step-n">2</span><h3>Şifresiz</h3><p class="lead" style="font-size:var(--label-size)">tek satır</p></div>
+  <div class="card"><span class="step-n">3</span><h3>Kurulumsuz</h3><p class="lead" style="font-size:var(--label-size)">tarayıcıda aç</p></div>
+</div>
+  </div>
+  <aside class="notes">(~45 sn) Uygulama sadece İngilizce dersine özel değil; akıllı tahta kullanan her branş öğretmeni kullanabilir. Kurulumun üç yolu var. Yönetici şifresini biliyorsanız .deb paketini indirip çift tıklıyorsunuz. Şifreniz yoksa Uçbirim’e tek bir satır yapıştırıyorsunuz. Hiç kurmak istemiyorsanız HTML dosyasını tarayıcıda açmanız yeterli. Ayrıntılı Türkçe kullanım kılavuzu GitHub sayfasında. Önemli bir not: Bu bir deneme sürümü; ayda bir yedek almanızı öneririm.</aside>
+</section>
+<section class="slide " id="kapanis">
+  <div class="slide-content">
+<h1 class="reveal">Teşekkürler</h1>
+<p class="lead reveal">Uygulama ve kılavuz:</p>
+<p class="reveal" style="font-family:var(--font-display);font-size:var(--h3-size);color:var(--accent)">github.com/bugracdnc/student-picker</p>
+<div class="small reveal" style="margin-top:var(--content-gap);max-width:120ch">
+<p><b style="color:var(--accent)">Kaynaklar</b></p>
+<p>Aguillon, S. M., Siegmund, G.-F., Petipas, R. H., Drake, A. G., Cotner, S. ve Ballen, C. J. (2020). Gender differences in student participation in an active-learning classroom. <i>CBE—Life Sciences Education</i>, 19(2), ar12. https://doi.org/10.1187/cbe.19-03-0048</p>
+<p>Botes, E., Dewaele, J.-M. ve Greiff, S. (2020). The Foreign Language Classroom Anxiety Scale and academic achievement: An overview of the prevailing literature and a meta-analysis. <i>Journal for the Psychology of Language Learning</i>, 2(1), 26–56. https://doi.org/10.52598/jpll/2/1/3</p>
+<p>Dallimore, E. J., Hertenstein, J. H. ve Platt, M. B. (2013). Impact of cold-calling on student voluntary participation. <i>Journal of Management Education</i>, 37(3), 305–341. https://doi.org/10.1177/1052562912446067</p>
+</div>
+  </div>
+  <aside class="notes">(~20 sn) Dinlediğiniz için teşekkürler. Uygulama GitHub’da ücretsiz; QR kodu okutarak kılavuza ve indirme sayfasına ulaşabilirsiniz. Denerseniz sınıfınızda nasıl çalıştığını duymak isterim. Sorularınızı alabilirim.</aside>
+</section>
+</main>
+<div class="counter" aria-live="polite"></div>
+<div class="hint">← → gezin · N notlar · F tam ekran</div>
+<div class="notes-panel" role="region" aria-label="Konuşmacı notları"></div>
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   keyboard, wheel/touch (native scroll-snap), progress, notes
+   =========================================== */
+class SlidePresentation {
+  constructor() {
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.i = 0;
+    this.bar = document.querySelector('.progress');
+    this.counter = document.querySelector('.counter');
+    this.panel = document.querySelector('.notes-panel');
+    this.observe();
+    this.keys();
+    this.go(Math.max(0, this.slides.findIndex(s => '#' + s.id === location.hash)), false);
+  }
+  observe() {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        this.i = this.slides.indexOf(e.target);
+        this.update();
+      }
+    }), { threshold: 0.6 });
+    this.slides.forEach(s => io.observe(s));
+  }
+  keys() {
+    document.addEventListener('keydown', e => {
+      const next = ['ArrowRight', 'ArrowDown', 'PageDown', ' '], prev = ['ArrowLeft', 'ArrowUp', 'PageUp'];
+      if (next.includes(e.key)) { e.preventDefault(); this.go(this.step(1)); }
+      else if (prev.includes(e.key)) { e.preventDefault(); this.go(this.step(-1)); }
+      else if (e.key === 'Home') this.go(0);
+      else if (e.key === 'End') this.go(this.slides.length - 1);
+      else if (e.key === 'n' || e.key === 'N') this.panel.classList.toggle('open');
+      else if (e.key === 'f' || e.key === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+    });
+  }
+  step(dir) {   // next page edge in that direction from where the paper really is, or from where a running glide is heading
+    if (this.to != null && performance.now() - this.at < 1000 && Math.abs(this.slides[this.to].getBoundingClientRect().top) > 2) return this.to + dir;
+    const tops = this.slides.map(s => s.getBoundingClientRect().top);
+    const i = dir > 0 ? tops.findIndex(t => t > 2) : tops.findLastIndex(t => t < -2);
+    return i < 0 ? (dir > 0 ? this.slides.length - 1 : 0) : i;
+  }
+  go(n, smooth = true) {
+    n = Math.max(0, Math.min(this.slides.length - 1, n));
+    this.to = n; this.at = performance.now();
+    this.slides[n].scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+    this.i = n; this.update();
+  }
+  update() {
+    const s = this.slides[this.i];
+    this.bar.style.width = ((this.i + 1) / this.slides.length * 100) + '%';
+    this.counter.textContent = (this.i + 1) + ' / ' + this.slides.length;
+    const notes = s.querySelector('aside.notes');
+    this.panel.textContent = notes ? notes.textContent.trim() : '';
+    history.replaceState(null, '', '#' + s.id);
+  }
+}
+new SlidePresentation();
+</script>
+<script>
+/* ===========================================
+   PAPER CUES (Notebook theme)
+   Minimal audio hints, synthesized (no files):
+   a soft tick each time a page edge (tear line) crosses the middle of the screen.
+   M = mute. Browsers stay silent until the first click/key.
+   =========================================== */
+(() => {
+  const VOL = { tick: 0.25 };
+  const slides = [...document.querySelectorAll('.slide')];
+  const hint = document.querySelector('.hint');
+  if (hint) hint.textContent = '← → / dokun gezin · N notlar · F tam ekran · M ses';
+
+  let ac = null, muted = false;
+  const unlock = () => { ac ??= new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); };
+  ['pointerdown', 'keydown', 'touchend'].forEach(e => addEventListener(e, unlock, { passive: true }));
+  addEventListener('keydown', e => { if (e.key === 'm' || e.key === 'M') muted = !muted; });
+
+  // short burst of band-passed noise with a fast decay: freq sets the colour, len the length
+  function cue(freq, len, vol) {
+    if (!ac || ac.state !== 'running' || muted) return;
+    const n = Math.ceil(ac.sampleRate * len), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 4);
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    src.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = 1.2; g.gain.value = vol;
+    src.connect(f).connect(g).connect(ac.destination); src.start();
+  }
+  const tick = () => cue(3200, 0.018, VOL.tick);
+
+  const edgesAbove = () => slides.filter(s => s.getBoundingClientRect().top < innerHeight / 2).length;
+  let edges = edgesAbove();
+  addEventListener('scroll', () => {
+    const e = edgesAbove();
+    if (e !== edges) { edges = e; tick(); }
+  }, { capture: true, passive: true });
+  console.assert(edges >= 1, 'paper cues: first page counted');
+})();
+
+/* ===========================================
+   TAP / CLICK / DRAG NAVIGATION (touch smartboards, mouse)
+   Tap or click: right three quarters = next slide, left quarter = previous.
+   Mouse click-and-drag scrolls the paper like a phone; a quick flick
+   goes to the next/previous page. Links and buttons keep working.
+   =========================================== */
+(() => {
+  const DRAG_PX = 6;                // movement before a press counts as a drag, not a tap
+  const pos = () => Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+  const setPos = y => [document.documentElement, document.body].forEach(el => el.scrollTo({ top: y, behavior: 'instant' }));
+  const skip = t => t.closest('a, button, input, .notes-panel');
+  let drag = null, wasDrag = false;
+  document.documentElement.style.cursor = 'grab';
+
+  addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse' || e.button !== 0 || skip(e.target)) return;
+    drag = { y0: e.clientY, top0: pos(), y: e.clientY, t: e.timeStamp, v: 0, moved: false };
+  });
+  addEventListener('pointermove', e => {
+    if (!drag) return;
+    if (!drag.moved && Math.abs(e.clientY - drag.y0) > DRAG_PX) {
+      drag.moved = true; dispatchEvent(new Event('drag-start'));
+      document.documentElement.style.cursor = 'grabbing'; document.body.style.userSelect = 'none';
+    }
+    if (!drag.moved) return;
+    const dt = Math.max(1, e.timeStamp - drag.t);
+    drag.v = 0.7 * drag.v + 0.3 * ((drag.y - e.clientY) / dt);   // px/ms, positive = paper moving up (forward)
+    drag.y = e.clientY; drag.t = e.timeStamp;
+    setPos(drag.top0 - (e.clientY - drag.y0));
+  });
+  addEventListener('pointerup', () => {
+    if (!drag) return;
+    wasDrag = drag.moved;
+    if (drag.moved) dispatchEvent(new CustomEvent('drag-end', { detail: { v: drag.v } }));
+    document.documentElement.style.cursor = 'grab'; document.body.style.userSelect = '';
+    drag = null;
+  });
+
+  addEventListener('click', e => {
+    if (wasDrag) { wasDrag = false; return; }          // the end of a drag is not a tap
+    if (e.button !== 0 || skip(e.target) || getSelection().toString()) return;
+    dispatchEvent(new Event('slide-tap'));
+    const key = e.clientX < innerWidth * 0.25 ? 'ArrowLeft' : 'ArrowRight';
+    document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+  });
+})();
+
+/* ===========================================
+   SETTLE ON A PAGE
+   When scrolling stops between two pages, glide to the page that
+   fills most of the screen. Waits while a finger is still down.
+   =========================================== */
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const pos = () => Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+  let timer = 0, touching = false;
+  addEventListener('touchstart', () => { touching = true; }, { passive: true });
+  addEventListener('touchend', () => { touching = false; arm(); }, { passive: true });
+  addEventListener('drag-start', () => { touching = true; });
+  addEventListener('drag-end', e => {
+    touching = false;
+    const FLICK = 0.5;              // px/ms
+    if (Math.abs(e.detail.v) < FLICK) return arm();
+    // the next page edge in the flick direction, from the real position (not the most-visible page, which may already be the next one)
+    const tops = slides.map(s => s.getBoundingClientRect().top);
+    const i = e.detail.v > 0 ? tops.findIndex(t => t > 2) : tops.findLastIndex(t => t < -2);
+    (slides[i] || current()).scrollIntoView({ behavior: 'smooth' });
+  });
+  function current() {               // the slide that fills most of the screen
+    return slides.reduce((a, s) => {
+      const r = s.getBoundingClientRect(), seen = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+      return seen > a.seen ? { s, seen } : a;
+    }, { s: null, seen: -1 }).s;
+  }
+  function settle() {
+    if (touching) return;
+    const best = current();
+    if (best && Math.abs(best.getBoundingClientRect().top) > 2) best.scrollIntoView({ behavior: 'smooth' });
+  }
+  function arm() { clearTimeout(timer); timer = setTimeout(settle, 180); }
+  addEventListener('scroll', arm, { capture: true, passive: true });
+  console.assert(slides.length > 0, 'settle: slides found');
+})();
+
+</script>
+</body>
+</html>

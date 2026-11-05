@@ -1,19 +1,61 @@
 {
   "v": 4,
-  "createdOnFiles": {"v": 1, "at": "2026-10-30T12:00:00Z"},
-  "lists": "css",
-  "title": "Herkese Eşit Söz: Öğrenci Seçici",
+  "attachments": {},
   "cover": "kapak",
-  "order": ["kapak", "sahne", "arastirma", "ingilizce", "kural", "isleyis", "ekran-secim", "ekran-liste", "yapim", "sim-kurulum", "sim-sonuc", "buyuk-sayi", "ipuclari", "kurulum", "kapanis"],
-  "sections": {
-    "s1": {"description": "Neden: söz hakkı sınıfta eşit dağılmıyor", "start": "kapak"},
-    "s2": {"description": "Nasıl çalışır ve nasıl yapıldı", "start": "kural"},
-    "s3": {"description": "Ne kadar fark eder: simülasyon sonuçları", "start": "sim-kurulum"},
-    "s4": {"description": "Sınıfta kullanım ve kurulum", "start": "ipuclari"}
+  "createdOnFiles": {
+    "at": "2026-10-30T12:00:00Z",
+    "v": 1
   },
+  "designSystems": [],
   "faces": {
-    "rubik": {"family": "Rubik", "href": "https://fonts.googleapis.com/css2?family=Rubik:wght@400..800&family=Nunito+Sans:wght@400;600;700&display=swap"},
-    "nunito-sans": {"family": "Nunito Sans", "href": "https://fonts.googleapis.com/css2?family=Rubik:wght@400..800&family=Nunito+Sans:wght@400;600;700&display=swap"}
+    "nunito-sans": {
+      "family": "Nunito Sans",
+      "href": "https://fonts.googleapis.com/css2?family=Rubik:wght@400..800&family=Nunito+Sans:wght@400;600;700&display=swap"
+    },
+    "rubik": {
+      "family": "Rubik",
+      "href": "https://fonts.googleapis.com/css2?family=Rubik:wght@400..800&family=Nunito+Sans:wght@400;600;700&display=swap"
+    }
   },
-  "designSystems": []
+  "lists": "css",
+  "order": [
+    "kapak",
+    "sahne",
+    "arastirma",
+    "ingilizce",
+    "kural",
+    "isleyis",
+    "ekran-secim",
+    "ekran-koyu",
+    "ekran-ingilizce",
+    "ekran-isim",
+    "ekran-liste",
+    "ekran-tablo",
+    "yapim",
+    "sim-kurulum",
+    "sim-sonuc",
+    "buyuk-sayi",
+    "ipuclari",
+    "kurulum",
+    "kapanis"
+  ],
+  "sections": {
+    "s1": {
+      "description": "Neden: söz hakkı sınıfta eşit dağılmıyor",
+      "start": "kapak"
+    },
+    "s2": {
+      "description": "Nasıl çalışır ve nasıl yapıldı",
+      "start": "kural"
+    },
+    "s3": {
+      "description": "Ne kadar fark eder: simülasyon sonuçları",
+      "start": "sim-kurulum"
+    },
+    "s4": {
+      "description": "Sınıfta kullanım ve kurulum",
+      "start": "ipuclari"
+    }
+  },
+  "title": "Herkese Eşit Söz: Öğrenci Seçici"
 }
