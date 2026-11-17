@@ -45,31 +45,25 @@ slide('sahne', 1, f'''<div class="row" style="align-items:center">
   <div style="display:flex;flex-direction:column;gap:var(--content-gap)">{K('Neden?')}{H2('Tanıdık bir sahne')}{L('Hep aynı eller kalkıyor.')}</div>
   <div style="display:flex;justify-content:center">{dots}</div>
 </div>'''),
-slide('arastirma', 2, f'''{K('Neden?')}{H2('Araştırmalar ne diyor?')}
-<div class="row reveal" style="margin-top:var(--content-gap)">
-  <div class="card"><h3>Söz isteyen hep aynı grup</h3><p class="cite">Aguillon ve ark., 2020</p></div>
-  <div class="card"><h3>Kaygı başarıyı düşürür</h3><p class="cite">Botes ve ark., 2020</p></div>
-  <div class="focal card" style="background:var(--accent)"><h3>Söz vermek gönüllüleri artırır</h3><p class="big" style="font-size:min(calc(var(--h3-size) * 1.3), 14cqi);white-space:nowrap">%55 → %77</p><p class="cite" style="color:var(--accent-ink)">Dallimore ve ark., 2013</p></div>
-</div>'''),
 slide('ingilizce', 0, f'''{K('Dil dersinde')}<h2 class="reveal">Söz hakkı, konuşma pratiği demek.</h2>{L('Parmak kaldırmayan, pratiği de kaçırır.')}''', 'statement'),
-slide('kural', 3, f'''{K('Uygulamanın tek kuralı')}<h2 class="reveal" style="font-size:var(--title-size);max-width:17ch">Herkes söz almadan, kimse <span style="color:var(--accent)">ikinci kez</span> seçilmez.</h2>{L('Sıra rastgele, söz hakkı eşit.')}'''),
-slide('isleyis', 4, f'''{K('Nasıl çalışır?')}{H2('Bir tur, beş adım')}
+slide('kural', 2, f'''{K('Uygulamanın tek kuralı')}<h2 class="reveal" style="font-size:var(--title-size);max-width:17ch">Herkes söz almadan, kimse <span style="color:var(--accent)">ikinci kez</span> seçilmez.</h2>{L('Sıra rastgele, söz hakkı eşit.')}'''),
+slide('isleyis', 3, f'''{K('Nasıl çalışır?')}{H2('Bir tur, beş adım')}
 <div class="row reveal" style="margin-top:var(--content-gap)">''' + ''.join(
     f'<div class="card"><span class="step-n">{i}</span><h3>{t}</h3></div>' for i, t in enumerate(['Sınıf listesi', 'Yoklama', 'Seçim havuzu', 'Rastgele seçim', 'Yeni tur'], 1)) + '</div>'),
-shot('ekran-secim', 5, 'z1-ana.png', 'Seçim ekranı: Öğrenci seç düğmesi, sayaçlar ve ilerleme çubuğu', 'Seçim ekranı', 'Tek büyük düğme: dokunun ya da Boşluk’a basın.'),
-shot('ekran-koyu', 5, 'z5-ana-koyu.png', 'Seçim ekranı koyu temada', 'Koyu tema da var', 'Karartılmış sınıfta göz yormaz.'),
-shot('ekran-ingilizce', 5, 'z6-ana-en.png', 'Seçim ekranı İngilizce arayüzle', '“It also comes in English!”', 'Arayüz her derste ek bir İngilizce girdi olur.'),
-shot('ekran-isim', 5, 'z2-isim.png', 'Seçilen öğrencinin adı büyük, altında −1 ve +1 düğmeleri', 'Söz sende', 'İsim arka sıradan da okunur.'),
-shot('ekran-liste', 5, 'z3-kartlar.png', 'Öğrenci kartları: Var / Yok / Pas düğmeleri ve Seçildi rozeti', 'Yoklama ve tur', 'Yok ya da Pas olan öğrenci seçilmez.'),
-shot('ekran-tablo', 5, 'z4-tablo.png', 'Tur tamamlandı ekranı ve puan tablosu', 'Tur bitti', 'Yeni tur tek dokunuşla başlar.'),
-slide('yapim', 6, f'''{K('Nasıl yapıldı?')}{H2('Sınıfın ihtiyacından doğdu')}{L('Eylül 2025’ten beri kendi derslerimde gelişiyor.')}
+shot('ekran-secim', 4, 'z1-ana.png', 'Seçim ekranı: Öğrenci seç düğmesi, sayaçlar ve ilerleme çubuğu', 'Seçim ekranı', 'Tek büyük düğme: dokunun ya da Boşluk’a basın.'),
+shot('ekran-koyu', 4, 'z5-ana-koyu.png', 'Seçim ekranı koyu temada', 'Koyu tema da var', 'Karartılmış sınıfta göz yormaz.'),
+shot('ekran-ingilizce', 4, 'z6-ana-en.png', 'Seçim ekranı İngilizce arayüzle', '“It also comes in English!”', 'Arayüz her derste ek bir İngilizce girdi olur.'),
+shot('ekran-isim', 4, 'z2-isim.png', 'Seçilen öğrencinin adı büyük, altında −1 ve +1 düğmeleri', 'Söz sende', 'İsim arka sıradan da okunur.'),
+shot('ekran-liste', 4, 'z3-kartlar.png', 'Öğrenci kartları: Var / Yok / Pas düğmeleri ve Seçildi rozeti', 'Yoklama ve tur', 'Yok ya da Pas olan öğrenci seçilmez.'),
+shot('ekran-tablo', 4, 'z4-tablo.png', 'Tur tamamlandı ekranı ve puan tablosu', 'Tur bitti', 'Yeni tur tek dokunuşla başlar.'),
+slide('yapim', 5, f'''{K('Nasıl yapıldı?')}{H2('Sınıfın ihtiyacından doğdu')}{L('Eylül 2025’ten beri kendi derslerimde gelişiyor.')}
 <div class="grid2 reveal" style="margin-top:var(--content-gap)">''' + ''.join(
     f'<div class="card"><h3>{t}</h3></div>' for t in ['İnternetsiz', 'Veri tahtada kalır', 'Pardus’a hazır', 'Türkçe / İngilizce']) + '</div>'),
-slide('sim-kurulum', 7, f'''{K('Ne kadar fark eder?')}{H2('30 öğrenci, 15 ders, 90 söz hakkı')}{L('Adil dağılımda herkes <b>3 kez</b> söz alır.')}
+slide('sim-kurulum', 6, f'''{K('Ne kadar fark eder?')}{H2('30 öğrenci, 15 ders, 90 söz hakkı')}{L('Adil dağılımda herkes <b>3 kez</b> söz alır.')}
 <div class="row reveal" style="margin-top:var(--content-gap)">
   <div class="card"><h3>Parmak kaldırma</h3></div><div class="card"><h3>Öğretmenin seçimi</h3></div><div class="card"><h3>İsim çarkı</h3></div><div class="focal card"><h3>Öğrenci Seçici</h3></div>
 </div>'''),
-slide('sim-sonuc', 7, f'''{K('Sonuçlar')}{H2('Bir ayda söz hakkı nasıl dağıldı?')}{L('Kısa çubuk daha adil.')}
+slide('sim-sonuc', 6, f'''{K('Sonuçlar')}{H2('Bir ayda söz hakkı nasıl dağıldı?')}{L('Kısa çubuk daha adil.')}
 <div class="row reveal" style="margin-top:var(--content-gap);gap:clamp(1rem,4vw,5rem)">
   <div class="chart"><h3>Ayda en fazla 1 kez konuşan</h3><div class="legend"><span style="--c:var(--ink-2)">hiç</span><span style="--c:var(--muted-bar)">1 kez</span></div>{left}</div>
   <div class="chart"><h3>En çok seçilen öğrenci kaç kez? <span style="color:var(--ink-2)">(adil: 3)</span></h3>{right}</div>
@@ -79,10 +73,10 @@ slide('buyuk-sayi', 0, f'''{H2('Rastgele olmak, adil olmak demek değil')}
   <div><p class="big">11<small>/30</small></p><p class="lead">İsim çarkıyla 30 soruda hiç seçilmeyen</p></div>
   <div><p class="big" style="color:var(--accent)">0<small>/30</small></p><p class="lead">Öğrenci Seçici ile hiç seçilmeyen</p></div>
 </div>'''),
-slide('ipuclari', 8, f'''{K('Sınıfta kullanım')}{H2('Kaygıyı artırmadan söz vermek')}
+slide('ipuclari', 7, f'''{K('Sınıfta kullanım')}{H2('Kaygıyı artırmadan söz vermek')}
 <div class="grid2 reveal" style="margin-top:var(--content-gap)">''' + ''.join(
     f'<div class="card" style="flex-direction:row;align-items:center"><span class="step-n" style="font-size:var(--h3-size);min-width:1.4em">0{i}</span><h3>{t}</h3></div>' for i, t in enumerate(['Önce soru, sonra isim', 'Düşünme süresi', 'Önce ikili prova', 'Çabayı ödüllendirin'], 1)) + '</div>'),
-slide('kurulum', 9, f'''{K('Her branş, her akıllı tahta')}{H2('Pardus’ta üç kurulum yolu')}
+slide('kurulum', 8, f'''{K('Her branş, her akıllı tahta')}{H2('Pardus’ta üç kurulum yolu')}
 <div class="row reveal" style="margin-top:var(--content-gap)">
   <div class="card"><span class="step-n">1</span><h3>Paketle</h3><p class="lead" style="font-size:var(--label-size)">.deb dosyası</p></div>
   <div class="card"><span class="step-n">2</span><h3>Şifresiz</h3><p class="lead" style="font-size:var(--label-size)">tek satır</p></div>
@@ -98,7 +92,7 @@ slide('kapanis', 0, f'''<h1 class="reveal">Teşekkürler</h1>
 <p>Dallimore, E. J., Hertenstein, J. H. ve Platt, M. B. (2013). Impact of cold-calling on student voluntary participation. <i>Journal of Management Education</i>, 37(3), 305–341. https://doi.org/10.1177/1052562912446067</p>
 </div>'''),
 ]
-assert len(S) == 19
+assert len(S) == 18
 # optional: argv[4] = comma-separated slide ids to keep, argv[5] = extra theme CSS file
 if len(sys.argv) > 4:
     keep = sys.argv[4].split(',')
