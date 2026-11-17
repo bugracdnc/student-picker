@@ -20,6 +20,7 @@
   "lists": "css",
   "order": [
     "kapak",
+    "icindekiler",
     "sahne",
     "ingilizce",
     "kural",
@@ -32,8 +33,8 @@
     "ekran-tablo",
     "yapim",
     "sim-kurulum",
-    "sim-sonuc",
     "buyuk-sayi",
+    "sim-sonuc",
     "ipuclari",
     "kurulum",
     "kapanis"
