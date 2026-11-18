@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Buğra Çalışkandinç
 // Offline support for the hosted version. Network first, so a new release shows up on the
 // next online visit; the cached copy is used when there is no connection.

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Buğra Çalışkandinç
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Buğra Çalışkandinç
 // Translation lookup. Text itself lives in translations.ts.
 import { DEFAULT_LANG, translations, type Lang, type MessageKey } from "./translations";

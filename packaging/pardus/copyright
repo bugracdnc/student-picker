@@ -5,6 +5,7 @@ Source: https://github.com/bugracdnc/student-picker
 
 Files: *
 Copyright: 2026 Buğra Çalışkandinç
-License: PolyForm-Noncommercial-1.0.0
+License: AGPL-3.0-or-later
 Comment:
- Required Notice: Copyright (C) 2026 Buğra Çalışkandinç — Student Picker (https://github.com/bugracdnc/student-picker)
+ The name "Student Picker" / "Öğrenci Seçici" and the logo are not covered
+ by this license; see TRADEMARKS.md in the source.
