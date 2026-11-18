@@ -11,7 +11,7 @@ import { allVariants, getLang, setLang, t, tRich } from "./i18n";
 import { LANGUAGE_NAMES, type Lang, type MessageKey } from "./translations";
 import {
     allPayload, classPayload, cloneClass, cloneStudent, MAX_LOGS, newStudent, normalizeData,
-    parseIncoming, splitNames, studentsPayload, toCsv, uid, type Incoming,
+    cleanName, parseIncoming, studentsPayload, toCsv, uid, type Incoming,
 } from "./transfer";
 
 const classesPanel = document.getElementById("classesPanel")!;
@@ -212,7 +212,7 @@ async function duplicateClass(cls: ClassItem) {
     });
     if (!ok) return;
     const copy = cloneClass(cls, { resetStats: reset.checked });
-    copy.name = nameInput.value.trim() || copy.name;
+    copy.name = cleanName(nameInput.value) || copy.name;
     data.classes.splice(data.classes.indexOf(cls) + 1, 0, copy);
     selectClass(copy.id);
     persist();
@@ -281,19 +281,33 @@ async function chooseClass(title: string, excludeId?: string): Promise<ClassItem
 
 async function addStudents(cls: ClassItem) {
     const area = h("textarea", { class: "input textarea", rows: 7, placeholder: t("students.addPlaceholder"), required: true });
+    // Same detection as Paste & import, but copied classes land here as students of this class.
+    const read = (): Incoming | null => {
+        const inc = parseIncoming(area.value);
+        return inc?.kind === "classes" ? { kind: "students", students: inc.classes.flatMap(c => c.students) } : inc;
+    };
+    const hint = h("p", { class: "detect" });
+    area.oninput = () => {
+        const inc = read();
+        hint.classList.toggle("ok", !!inc);
+        hint.replaceChildren(icon(inc ? "check" : "info"), describeIncoming(inc));
+    };
     const ok = await modal({
         title: t("students.add"),
         description: h("span", null, tRich("students.addDesc", { name: h("strong", null, cls.name) })),
-        body: area,
+        body: h("div", { class: "stack" }, area, hint),
         actions: [cancelAction(), { label: t("students.add"), value: true, variant: "primary", submit: true }],
         init: () => area.focus(),
     });
     if (!ok) return;
-    const names = splitNames(area.value);
-    if (!names.length) return;
-    cls.students.push(...names.map(newStudent));
+    const inc = read();
+    if (!inc) return toast(t("paste.nothing"), { tone: "error" });
+    if (inc.kind === "all") return applyIncoming(inc); // a full backup gets the restore/merge choice
+    const students = inc.kind === "names" ? inc.names.map(newStudent) : inc.kind === "students" ? inc.students.map(s => cloneStudent(s)) : [];
+    if (!students.length) return;
+    cls.students.push(...students);
     persist();
-    toast(t("students.added", { what: names.length === 1 ? names[0] : count("count.students", names.length) }), { tone: "success" });
+    toast(t("students.added", { what: students.length === 1 ? students[0].name : count("count.students", students.length) }), { tone: "success" });
 }
 
 async function renameStudent(s: Student) {

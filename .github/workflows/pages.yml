@@ -28,6 +28,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test
       - run: npx tsc && npx vite build
       - uses: actions/upload-pages-artifact@v3
         with:

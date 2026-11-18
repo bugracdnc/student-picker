@@ -22,6 +22,18 @@ export function uid() {
 
 const nonNull = <T>(v: T | null): v is T => v != null;
 
+const MAX_NAME = 100;
+
+/** Normalises a typed or imported name: no invisible/control/bidi characters, single spaces, sane length. */
+export function cleanName(raw: unknown): string {
+    return String(raw ?? "")
+        .normalize("NFC")
+        .replace(/[\u0000-\u001f\u007f-\u009f\u00ad\u200b-\u200f\u2028-\u202e\u2060-\u206f\ufeff]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, MAX_NAME);
+}
+
 function toInt(v: unknown) {
     const n = Number(v);
     return Number.isFinite(n) ? Math.trunc(n) : 0;
@@ -31,7 +43,7 @@ function toInt(v: unknown) {
 
 export function normalizeStudent(raw: any): Student | null {
     if (!raw || typeof raw !== "object") return null;
-    const name = String(raw.name ?? "").trim();
+    const name = cleanName(raw.name);
     if (!name) return null;
     return {
         id: typeof raw.id === "string" && raw.id ? raw.id : uid(),
@@ -47,7 +59,7 @@ export function normalizeClass(raw: any): ClassItem | null {
     if (!raw || typeof raw !== "object" || !Array.isArray(raw.students)) return null;
     return {
         id: typeof raw.id === "string" && raw.id ? raw.id : uid(),
-        name: String(raw.name ?? "").trim() || t("classes.untitled"),
+        name: cleanName(raw.name) || t("classes.untitled"),
         students: raw.students.map(normalizeStudent).filter(nonNull),
     };
 }
@@ -62,7 +74,7 @@ export function normalizeData(raw: any): AppData {
 /* ========== Creating / cloning ========== */
 
 export function newStudent(name: string): Student {
-    return { id: uid(), name: name.trim(), status: "present", participationCount: 0, score: 0, hasParticipatedThisRound: false };
+    return { id: uid(), name: cleanName(name), status: "present", participationCount: 0, score: 0, hasParticipatedThisRound: false };
 }
 
 export function cloneStudent(s: Student, opts: { resetStats?: boolean } = {}): Student {
@@ -99,7 +111,7 @@ export function toCsv(c: ClassItem, students = c.students): string {
 
 /* ========== Import detection ========== */
 
-function parseCsv(text: string): string[][] {
+function parseCsv(text: string, delim: string): string[][] {
     const rows: string[][] = [];
     let row: string[] = [];
     let cell = "";
@@ -112,7 +124,7 @@ function parseCsv(text: string): string[][] {
                 else quoted = false;
             } else cell += ch;
         } else if (ch === '"') quoted = true;
-        else if (ch === ",") { row.push(cell); cell = ""; }
+        else if (ch === delim) { row.push(cell); cell = ""; }
         else if (ch === "\n" || ch === "\r") {
             if (ch === "\r" && text[i + 1] === "\n") i++;
             row.push(cell); rows.push(row); row = []; cell = "";
@@ -124,37 +136,57 @@ function parseCsv(text: string): string[][] {
 
 const norm = (s = "") => s.trim().toLocaleLowerCase();
 
-/** Reads CSV exported in any supported language (header names and values are matched against all translations). */
+// Header names from other sources (spreadsheets, e-Okul lists). Our own headers come from translations.
+const FULL_NAME_HEADERS = ["ad soyad", "adı soyadı", "adi soyadi", "ad-soyad", "öğrenci", "öğrenci adı", "isim", "isim soyisim", "student", "student name", "full name", "fullname"];
+const FIRST_NAME_HEADERS = ["adı", "adi", "first name", "firstname", "given name"];
+const LAST_NAME_HEADERS = ["soyadı", "soyadi", "soyad", "last name", "lastname", "surname", "family name"];
+
+/** Reads CSV/TSV in any supported language. Excel in Turkish saves with ";", spreadsheet copies use tabs. */
 function fromCsv(text: string): Student[] | null {
-    const rows = parseCsv(text);
-    const header = rows[0]?.map(c => norm(c));
-    if (!header || header.length < 2) return null;
-    const col = (key: Parameters<typeof allVariants>[0]) => {
-        const names = allVariants(key).map(norm);
-        return header.findIndex(c => names.includes(c));
-    };
-    const iName = col("csv.name");
-    if (iName < 0) return null;
-    const [iStatus, iScore, iTurns, iPicked] = [col("csv.status"), col("csv.score"), col("csv.turns"), col("csv.picked")];
+    const top = text.split(/\r?\n/, 10).join("\n");
+    const delim = ["\t", ";", ","].map(d => [d, top.split(d).length] as const).sort((a, b) => b[1] - a[1])[0][0];
+    const rows = parseCsv(text, delim);
     const statusByLabel = new Map<string, Status>();
     for (const st of STATUSES) {
         statusByLabel.set(st, st);
         allVariants(`status.${st}`).forEach(label => statusByLabel.set(norm(label), st));
     }
     const yes = allVariants("csv.yes").map(norm);
-    return rows.slice(1).map(r => normalizeStudent({
-        name: r[iName],
-        status: statusByLabel.get(norm(r[iStatus])),
-        score: r[iScore],
-        participationCount: r[iTurns],
-        hasParticipatedThisRound: yes.includes(norm(r[iPicked])),
-    })).filter(nonNull);
+    // The header may sit below a few title rows (e.g. school name), so look for it.
+    for (let h = 0; h < Math.min(rows.length, 10); h++) {
+        const header = rows[h].map(c => norm(c));
+        const col = (names: string[]) => header.findIndex(c => names.includes(c));
+        const own = (key: Parameters<typeof allVariants>[0]) => col(allVariants(key).map(norm));
+        const iName = own("csv.name") >= 0 ? own("csv.name") : col(FULL_NAME_HEADERS);
+        const [iFirst, iLast] = [col(FIRST_NAME_HEADERS), col(LAST_NAME_HEADERS)];
+        if (iName < 0 && (iFirst < 0 || iLast < 0)) continue;
+        const [iStatus, iScore, iTurns, iPicked] = [own("csv.status"), own("csv.score"), own("csv.turns"), own("csv.picked")];
+        return rows.slice(h + 1).map(r => normalizeStudent({
+            name: iName >= 0 ? r[iName] : `${r[iFirst] ?? ""} ${r[iLast] ?? ""}`,
+            status: statusByLabel.get(norm(r[iStatus])),
+            score: r[iScore],
+            participationCount: r[iTurns],
+            hasParticipatedThisRound: yes.includes(norm(r[iPicked])),
+        })).filter(nonNull);
+    }
+    return null;
 }
 
-/** One name per line; strips list bullets, turns spreadsheet tabs into spaces. */
+/**
+ * One name per line, or a single line separated by commas/semicolons ("Ali, Ayşe; Can").
+ * Strips bullets, "1." / "2)" numbering, wrapping quotes and trailing commas; tabs become spaces.
+ */
 export function splitNames(text: string): string[] {
-    return text.split(/\r?\n/)
-        .map(line => line.replace(/^[\s\-*•·]+/, "").replace(/\t+/g, " ").trim())
+    const lines = text.split(/\r\n|\r|\n/);
+    const parts = lines.filter(l => l.trim()).length === 1 ? text.split(/[,;]/) : lines;
+    return parts
+        .map(line => cleanName(line
+            .replace(/\t+/g, " ")
+            .trim()
+            .replace(/^[-*•·–—]+\s*/, "")
+            .replace(/^\d{1,3}\s*[.)]\s*(?=\p{L})/u, "")
+            .replace(/[,;]$/, "")
+            .replace(/^["'“”‘’«»](.*)["'“”‘’«»]$/, "$1")))
         .filter(Boolean);
 }
 
@@ -163,7 +195,7 @@ function interpret(obj: any): Incoming | null {
         const classes = obj.map(normalizeClass).filter(nonNull);
         if (classes.length) return { kind: "classes", classes };
         if (obj.every(x => typeof x === "string")) {
-            const names = obj.map(x => x.trim()).filter(Boolean);
+            const names = obj.map(cleanName).filter(Boolean);
             return names.length ? { kind: "names", names } : null;
         }
         const students = obj.map(normalizeStudent).filter(nonNull);
@@ -185,14 +217,36 @@ function interpret(obj: any): Incoming | null {
     return s ? { kind: "students", students: [s] } : null;
 }
 
+/** Several copied payloads pasted one after another: `{...}{...}` or one per line. */
+function interpretConcatenated(text: string): Incoming | null {
+    let parsed: unknown[];
+    try {
+        parsed = JSON.parse(`[${text.replace(/}\s*,?\s*{/g, "},{")}]`);
+    } catch {
+        return null;
+    }
+    const parts = parsed.map(interpret);
+    if (!parts.length || parts.some(p => !p)) return null;
+    if (parts.every(p => p!.kind === "classes")) return { kind: "classes", classes: parts.flatMap(p => p!.kind === "classes" ? p!.classes : []) };
+    if (parts.every(p => p!.kind === "students" || p!.kind === "names")) {
+        return { kind: "students", students: parts.flatMap(p => p!.kind === "students" ? p!.students : p!.kind === "names" ? p!.names.map(newStudent) : []) };
+    }
+    return null;
+}
+
+/**
+ * Detects what pasted/dropped text is, most specific first:
+ * Student Picker JSON (backup, class, students) → other JSON → CSV/TSV with a name column → a list of names.
+ * Text that looks like JSON but cannot be read is rejected instead of being split into "names".
+ */
 export function parseIncoming(text: string): Incoming | null {
-    const trimmed = text.trim();
+    const trimmed = text.replace(/^\ufeff/, "").trim();
     if (!trimmed) return null;
     if (/^[[{]/.test(trimmed)) {
         try {
             return interpret(JSON.parse(trimmed));
         } catch {
-            return null;
+            return interpretConcatenated(trimmed);
         }
     }
     const csv = fromCsv(trimmed);

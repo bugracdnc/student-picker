@@ -3,6 +3,7 @@
 // Reusable UI primitives: toasts, modal dialogs, popover menus, clipboard.
 import { h, icon, type Child, type IconName } from "./dom";
 import { t } from "./i18n";
+import { cleanName } from "./transfer";
 
 /* ========== Toasts ========== */
 
@@ -126,7 +127,7 @@ export async function promptText(title: string, opts: { label: string; value?: s
             input.select();
         },
     });
-    const value = input.value.trim();
+    const value = cleanName(input.value);
     return ok && value ? value : null;
 }
 
