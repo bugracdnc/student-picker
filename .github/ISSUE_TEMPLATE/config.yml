@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Feedback without a GitHub account / GitHub hesabı olmadan görüş bildir
+    url: https://docs.google.com/forms/d/e/1FAIpQLSecbfS47fE0Qx73MePtWqP0HhE8DOnXTIV8m-LvpLANWbAJOw/viewform
+    about: A short form, no sign-in needed. / Kısa bir form, giriş gerekmez.

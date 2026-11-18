@@ -1,0 +1,23 @@
+name: Problem / Sorun
+description: Something does not work / Bir şey çalışmıyor
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include real student names. / Lütfen gerçek öğrenci adlarını yazmayın.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect? / Ne oldu, ne bekliyordunuz?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps (optional) / Adımlar (isteğe bağlı)
+      placeholder: 1. … 2. … 3. …
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser / Cihaz ve tarayıcı
+      placeholder: e.g. ETAP smart board, Firefox / örn. ETAP akıllı tahta, Firefox

@@ -1,0 +1,16 @@
+name: Suggestion / Öneri
+description: An idea or wish for the app / Uygulama için bir fikir ya da istek
+labels: [suggestion]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help you? / Neye ihtiyacınız var?
+      description: Describe it in your own words, in English or Turkish. / Kendi cümlelerinizle, Türkçe ya da İngilizce yazın.
+    validations:
+      required: true
+  - type: input
+    id: context
+    attributes:
+      label: Where do you use it? (optional) / Nerede kullanıyorsunuz? (isteğe bağlı)
+      placeholder: e.g. smart board, phone, Pardus PC / örn. akıllı tahta, telefon, Pardus bilgisayar

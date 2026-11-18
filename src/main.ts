@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Buğra Çalışkandinç
 // src/main.ts
 /// <reference types="vite/client" />
@@ -669,6 +669,8 @@ function renderChrome() {
     document.getElementById("brandTagline")!.textContent = t("app.tagline");
     document.getElementById("licenseText")!.textContent = t("app.license");
     document.getElementById("sourceLabel")!.textContent = t("app.source");
+    document.getElementById("madeByLabel")!.textContent = t("app.madeBy");
+    document.getElementById("feedbackLink")!.textContent = t("app.feedback");
     classesPanel.setAttribute("aria-label", t("classes.title"));
     studentsPanel.setAttribute("aria-label", t("students.title"));
 }
