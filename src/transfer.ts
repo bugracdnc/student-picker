@@ -7,6 +7,8 @@ import { allVariants, t } from "./i18n";
 
 const APP_ID = "student-picker";
 const FORMAT_VERSION = 1;
+// shortcut: nothing reads logs yet, so only the newest are kept to stay under the ~5 MB storage quota; revisit if a history view is added.
+export const MAX_LOGS = 500;
 
 export type Incoming =
     | { kind: "all"; data: AppData }
@@ -53,7 +55,7 @@ export function normalizeClass(raw: any): ClassItem | null {
 export function normalizeData(raw: any): AppData {
     return {
         classes: Array.isArray(raw?.classes) ? raw.classes.map(normalizeClass).filter(nonNull) : [],
-        logs: Array.isArray(raw?.logs) ? raw.logs.filter((l: unknown) => l && typeof l === "object") : [],
+        logs: Array.isArray(raw?.logs) ? raw.logs.filter((l: unknown) => l && typeof l === "object").slice(-MAX_LOGS) : [],
     };
 }
 

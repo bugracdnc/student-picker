@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (C) 2026 Buğra Çalışkandinç
 // src/main.ts
-import type { AppData, ClassItem, Status, Student } from "./models";
+/// <reference types="vite/client" />
+import type { AppData, ClassItem, LogEntry, Status, Student } from "./models";
 import { STATUSES } from "./models";
 import { downloadFile, loadData, readFileText, saveData } from "./storage";
 import { h, icon, type Child, type IconName } from "./dom";
@@ -9,7 +10,7 @@ import { copyText, field, modal, openMenu, promptText, toast, type MenuItem } fr
 import { allVariants, getLang, setLang, t, tRich } from "./i18n";
 import { LANGUAGE_NAMES, type Lang, type MessageKey } from "./translations";
 import {
-    allPayload, classPayload, cloneClass, cloneStudent, newStudent, normalizeData,
+    allPayload, classPayload, cloneClass, cloneStudent, MAX_LOGS, newStudent, normalizeData,
     parseIncoming, splitNames, studentsPayload, toCsv, uid, type Incoming,
 } from "./transfer";
 
@@ -50,8 +51,13 @@ function ensureCurrentClass() {
 }
 
 function persist() {
-    saveData(data);
+    if (!saveData(data)) toast(t("storage.saveFailed"), { tone: "error", action: { label: t("header.backup"), run: exportAll } });
     renderAll();
+}
+
+function addLog(entry: LogEntry) {
+    data.logs.push(entry);
+    if (data.logs.length > MAX_LOGS) data.logs.splice(0, data.logs.length - MAX_LOGS);
 }
 
 /** Apply a change and offer an Undo toast that restores the previous state. */
@@ -86,28 +92,30 @@ function escapeRegExp(s: string) {
 }
 
 function uniqueName(base: string, taken: string[]) {
-    const used = new Set(taken.map(n => n.toLowerCase()));
-    if (!used.has(base.toLowerCase())) return base;
+    const lower = (n: string) => n.toLocaleLowerCase(getLang());
+    const used = new Set(taken.map(lower));
+    if (!used.has(lower(base))) return base;
     const suffixes = allVariants("common.copySuffix").map(escapeRegExp).join("|");
     const root = base.replace(new RegExp(` \\((?:${suffixes})(?: \\d+)?\\)$`), "");
     const word = t("common.copySuffix");
     for (let i = 1; ; i++) {
         const candidate = i === 1 ? `${root} (${word})` : `${root} (${word} ${i})`;
-        if (!used.has(candidate.toLowerCase())) return candidate;
+        if (!used.has(lower(candidate))) return candidate;
     }
 }
 
 function slug(s: string) {
-    return s.toLowerCase().normalize("NFKD").replace(/[^\w]+/g, "-").replace(/^-+|-+$/g, "") || "export";
+    // Strip accents and map dotless ı so "Sınıf" becomes "sinif", not "s-n-f".
+    return s.toLocaleLowerCase(getLang()).replace(/ı/g, "i").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w]+/g, "-").replace(/^-+|-+$/g, "") || "export";
 }
 
 function initials(name: string) {
     const words = name.split(/\s+/).map(w => w.replace(/[^\p{L}\p{N}]/gu, "")).filter(Boolean);
     if (!words.length) return "?";
     // Grade-style prefixes like "9-A" or "10B" read best as-is.
-    if (/\d/.test(words[0]) && words[0].length <= 3) return words[0].toUpperCase();
+    if (/\d/.test(words[0]) && words[0].length <= 3) return words[0].toLocaleUpperCase(getLang());
     const letters = words.length > 1 ? words[0][0] + words[words.length - 1][0] : words[0].slice(0, 2);
-    return letters.toUpperCase();
+    return letters.toLocaleUpperCase(getLang());
 }
 
 function fmtScore(n: number) {
@@ -342,7 +350,7 @@ function setStatus(students: Student[], status: Status) {
 
 function adjustScore(cls: ClassItem, s: Student, delta: number) {
     s.score += delta;
-    data.logs.push({ type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO() });
+    addLog({ type: "score", classId: cls.id, studentId: s.id, delta, ts: nowISO() });
     persist();
 }
 
@@ -418,7 +426,7 @@ async function pick() {
     if (!currentClass()?.students.includes(chosen)) return renderAll();
     chosen.hasParticipatedThisRound = true;
     chosen.participationCount++;
-    data.logs.push({ type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO() });
+    addLog({ type: "participation", classId: cls.id, studentId: chosen.id, ts: nowISO() });
     lastPick = { classId: cls.id, studentId: chosen.id };
     celebrate = true;
     persist();
@@ -586,6 +594,15 @@ function toggleTheme() {
     renderControlsPanel();
 }
 
+/* ========== Full screen ========== */
+
+function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => { /* refused by the browser */ });
+}
+
+document.addEventListener("fullscreenchange", () => renderControlsPanel());
+
 /* ========== Language ========== */
 
 function changeLang(next: Lang) {
@@ -652,6 +669,9 @@ function renderControlsPanel() {
             }, LANGUAGE_NAMES[code].short)),
         ),
         iconBtn(theme === "dark" ? "sun" : "moon", t(theme === "dark" ? "header.lightMode" : "header.darkMode"), toggleTheme),
+        ...(document.fullscreenEnabled
+            ? [iconBtn(document.fullscreenElement ? "shrink" : "expand", t(document.fullscreenElement ? "header.exitFullscreen" : "header.fullscreen"), toggleFullscreen)]
+            : []),
         fileInput,
     );
 }
@@ -991,4 +1011,14 @@ window.addEventListener("drop", e => {
 document.documentElement.dataset.theme = theme;
 document.documentElement.lang = getLang();
 renderAll();
+
+// Installable app + offline cache, only when served over https or localhost (not file:// or the dev server).
+if (import.meta.env.PROD && location.protocol.startsWith("http") && isSecureContext && "serviceWorker" in navigator) {
+    document.head.append(
+        h("link", { rel: "manifest", href: "manifest.webmanifest" }),
+        h("link", { rel: "apple-touch-icon", href: "icons/icon-192.png" }),
+    );
+    navigator.serviceWorker.register("sw.js").catch(err => console.warn("Service worker not registered", err));
+    navigator.storage?.persist?.(); // ask the browser not to clear saved classes under storage pressure
+}
 Object.defineProperty(window, "appData", { get: () => data }); // for debugging in console

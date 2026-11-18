@@ -51,6 +51,8 @@ const en = {
     "header.backupTitle": "Download a backup of all classes",
     "header.lightMode": "Light mode",
     "header.darkMode": "Dark mode",
+    "header.fullscreen": "Full screen",
+    "header.exitFullscreen": "Exit full screen",
     "header.language": "Language",
 
     // Classes
@@ -175,6 +177,7 @@ const en = {
 
     // Import / export
     "backup.downloaded": "Backup downloaded",
+    "storage.saveFailed": "Changes could not be saved. Download a backup now.",
     "detect.none": "Nothing recognised yet",
     "detect.all": "Full backup · {classes}, {students}",
     "detect.classes": "{classes} with {students} — added as new",
@@ -248,6 +251,8 @@ const tr: Record<MessageKey, Message> = {
     "header.backupTitle": "Tüm sınıfların yedeğini indir",
     "header.lightMode": "Açık tema",
     "header.darkMode": "Koyu tema",
+    "header.fullscreen": "Tam ekran",
+    "header.exitFullscreen": "Tam ekrandan çık",
     "header.language": "Dil",
 
     // Sınıflar
@@ -372,6 +377,7 @@ const tr: Record<MessageKey, Message> = {
 
     // İçe / dışa aktarma
     "backup.downloaded": "Yedek indirildi",
+    "storage.saveFailed": "Değişiklikler kaydedilemedi. Hemen yedek indirin.",
     "detect.none": "Henüz bir şey tanınmadı",
     "detect.all": "Tam yedek · {classes}, {students}",
     "detect.classes": "{classes}, {students} — yeni olarak eklenecek",

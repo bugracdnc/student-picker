@@ -5,20 +5,26 @@ import type { AppData } from "./models.ts"
 const KEY = "student-picker:v1";
 
 export function loadData(): AppData {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) {
-        return { classes: [], logs: [] }
-    }
+    let raw: string | null = null;
     try {
-        return JSON.parse(raw) as AppData;
-    } catch (error) {
-        console.warn("Failed to parse saved data; starting fresh");
-        return { classes: [], logs: [] };
+        raw = localStorage.getItem(KEY);
+        if (raw) return JSON.parse(raw) as AppData;
+    } catch {
+        console.warn("Saved data is unreadable or storage is blocked; starting fresh");
+        // Keep the unreadable copy so the next save does not destroy it.
+        try { if (raw) localStorage.setItem(`${KEY}:unreadable`, raw); } catch { /* ignore */ }
     }
+    return { classes: [], logs: [] };
 }
 
-export function saveData(data: AppData) {
-    localStorage.setItem(KEY, JSON.stringify(data));
+/** Returns false when the browser refuses to store (quota full, storage disabled). */
+export function saveData(data: AppData): boolean {
+    try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 export function downloadFile(filename: string, content: string, mime = "application/json") {
