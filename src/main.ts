@@ -603,6 +603,43 @@ function toggleFullscreen() {
 
 document.addEventListener("fullscreenchange", () => renderControlsPanel());
 
+/* ========== Install as app ========== */
+
+// Chromium browsers hand us this event when the app is installable; iOS has no prompt, only Share → Add to Home Screen.
+let installPrompt: (Event & { prompt(): Promise<unknown> }) | null = null;
+const pwaEnabled = import.meta.env.PROD && location.protocol.startsWith("http") && isSecureContext && "serviceWorker" in navigator;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isInstalled = () => matchMedia("(display-mode: standalone)").matches || (navigator as { standalone?: boolean }).standalone === true;
+
+function canOfferInstall() {
+    return pwaEnabled && !isInstalled() && (installPrompt != null || isIOS);
+}
+
+async function installApp() {
+    if (installPrompt) {
+        await installPrompt.prompt();
+        installPrompt = null; // a prompt can only be used once
+        renderControlsPanel();
+        return;
+    }
+    await modal({
+        title: t("install.iosTitle"),
+        description: t("install.iosDesc"),
+        body: h("ol", { class: "install-steps" }, h("li", null, t("install.iosStep1")), h("li", null, t("install.iosStep2")), h("li", null, t("install.iosStep3"))),
+        actions: [{ label: t("common.close"), value: true, variant: "primary", submit: true }],
+    });
+}
+
+window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    installPrompt = e as typeof installPrompt;
+    renderControlsPanel();
+});
+window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    renderControlsPanel();
+});
+
 /* ========== Language ========== */
 
 function changeLang(next: Lang) {
@@ -653,6 +690,7 @@ function renderControlsPanel() {
         },
     });
     controlsPanel.replaceChildren(
+        ...(canOfferInstall() ? [button([icon("download"), h("span", { class: "btn-text" }, t("header.install"))], installApp, "btn btn-primary", { title: t("header.install") })] : []),
         button([icon("paste"), h("span", { class: "btn-text" }, t("header.paste"))], () => openPasteDialog(), "btn btn-ghost", { title: t("header.pasteTitle") }),
         button([icon("upload"), h("span", { class: "btn-text" }, t("header.import"))], () => fileInput.click(), "btn btn-ghost", { title: t("header.importTitle") }),
         button([icon("download"), h("span", { class: "btn-text" }, t("header.backup"))], exportAll, "btn btn-soft", { title: t("header.backupTitle") }),
@@ -1013,7 +1051,7 @@ document.documentElement.lang = getLang();
 renderAll();
 
 // Installable app + offline cache, only when served over https or localhost (not file:// or the dev server).
-if (import.meta.env.PROD && location.protocol.startsWith("http") && isSecureContext && "serviceWorker" in navigator) {
+if (pwaEnabled) {
     document.head.append(
         h("link", { rel: "manifest", href: "manifest.webmanifest" }),
         h("link", { rel: "apple-touch-icon", href: "icons/icon-192.png" }),

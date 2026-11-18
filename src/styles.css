@@ -1588,3 +1588,11 @@ body.dragging::after {
     width: 34px;
   }
 }
+
+.install-steps {
+  margin: 0;
+  padding-left: 1.4em;
+  display: grid;
+  gap: 10px;
+  line-height: 1.5;
+}

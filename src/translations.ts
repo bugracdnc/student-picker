@@ -53,6 +53,12 @@ const en = {
     "header.darkMode": "Dark mode",
     "header.fullscreen": "Full screen",
     "header.exitFullscreen": "Exit full screen",
+    "header.install": "Install app",
+    "install.iosTitle": "Install on iPhone / iPad",
+    "install.iosDesc": "In Safari:",
+    "install.iosStep1": "Tap the Share button (square with an arrow) in the toolbar.",
+    "install.iosStep2": "Scroll down and tap “Add to Home Screen”.",
+    "install.iosStep3": "Tap “Add”. The app then opens from your home screen and works offline.",
     "header.language": "Language",
 
     // Classes
@@ -253,6 +259,12 @@ const tr: Record<MessageKey, Message> = {
     "header.darkMode": "Koyu tema",
     "header.fullscreen": "Tam ekran",
     "header.exitFullscreen": "Tam ekrandan çık",
+    "header.install": "Uygulamayı yükle",
+    "install.iosTitle": "iPhone / iPad'e yükle",
+    "install.iosDesc": "Safari'de:",
+    "install.iosStep1": "Araç çubuğundaki Paylaş düğmesine (oklu kare) dokunun.",
+    "install.iosStep2": "Aşağı kaydırıp “Ana Ekrana Ekle”ye dokunun.",
+    "install.iosStep3": "“Ekle”ye dokunun. Uygulama artık ana ekrandan açılır ve internetsiz çalışır.",
     "header.language": "Dil",
 
     // Sınıflar
