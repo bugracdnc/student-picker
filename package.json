@@ -10,7 +10,7 @@
     "build": "tsc && vite build && mv dist/index.html dist/student-picker.html",
     "release": "sh scripts/release.sh",
     "preview": "vite preview",
-    "test": "esbuild scripts/check-transfer.ts --bundle --platform=node --format=esm --log-level=warning | node --input-type=module"
+    "test": "for f in scripts/check-*.ts; do esbuild $f --bundle --platform=node --format=esm --log-level=warning | node --input-type=module || exit 1; done"
   },
   "devDependencies": {
     "typescript": "~5.8.3",
