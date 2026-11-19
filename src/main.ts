@@ -4,6 +4,7 @@
 /// <reference types="vite/client" />
 import type { AppData, ClassItem, LogEntry, Status, Student } from "./models";
 import { STATUSES } from "./models";
+import { availableIn, choose } from "./pick";
 import { downloadFile, loadData, readFileText, saveData } from "./storage";
 import { h, icon, type Child, type IconName } from "./dom";
 import { copyText, field, modal, openMenu, promptText, toast, type MenuItem } from "./ui";
@@ -120,10 +121,6 @@ function initials(name: string) {
 
 function fmtScore(n: number) {
     return n > 0 ? `+${n}` : String(n);
-}
-
-function availableIn(cls: ClassItem) {
-    return cls.students.filter(s => s.status === "present" && !s.hasParticipatedThisRound);
 }
 
 /* ========== Small view builders ========== */
@@ -431,7 +428,7 @@ async function pick() {
         toast(t(anyPresent ? "pick.everyoneHadTurn" : "pick.nobodyPresent"), anyPresent ? { action: { label: t("round.new"), run: () => resetRound(cls) } } : {});
         return;
     }
-    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    const chosen = choose(pool)!;
     picking = true;
     renderMainPanel();
     await shuffleAnimation(pool, chosen);

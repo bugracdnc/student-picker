@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 release
+
+# Private working notes, kept on disk only
+docs/presentation/chats/
+docs/presentation/claude-memory/

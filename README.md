@@ -1,10 +1,18 @@
 # Student Picker · Öğrenci Seçici
 
+[![Pages](https://github.com/bugracdnc/student-picker/actions/workflows/pages.yml/badge.svg)](https://github.com/bugracdnc/student-picker/actions/workflows/pages.yml)
+
+**▶ Use it online / Tarayıcıda aç: https://bugracdnc.github.io/student-picker/**
+
+![Student Picker main screen](docs/screenshots/main-light.png)
+
 Fair random student picker for classrooms and smart boards. Nobody is picked twice until everyone present has had a turn. Attendance, plus/minus points, several classes, English and Turkish. Runs offline as a single HTML file; data stays in the browser.
 
 Sınıflar ve akıllı tahtalar için adil, rastgele öğrenci seçici. Herkes söz almadan kimse ikinci kez seçilmez. Yoklama, artı/eksi puan, birden fazla sınıf; Türkçe ve İngilizce. İnternetsiz çalışır, bilgiler tarayıcıda kalır.
 
 > **Alpha** — expect rough edges; take backups. / **Alfa** — deneme sürümüdür; yedek almayı unutmayın.
+
+![A student picked, dark theme](docs/screenshots/picked-dark.png)
 
 ## Guides / Kılavuzlar
 
