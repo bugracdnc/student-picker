@@ -1,0 +1,2 @@
+- [Presentation deck](presentation-deck.md) — Turkish teacher presentation in progress; handoff in presentation/NOTES.md
+- [npm broken in Termux shell](termux-npm-shebang.md) — run node entry points directly instead of npm run
